@@ -1,0 +1,61 @@
+/*
+ *
+ * Header navigation
+ *
+ */
+
+nav{
+	position: fixed;
+	padding: .4em;
+	height: 48px;
+	z-index: 1;
+}
+
+nav h1{
+	margin: .4em auto;
+}
+
+/*
+ *
+ * Filter
+ *
+ */
+.filter-options {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    padding-top: .6em;
+    height: auto;
+}
+
+.filter-options h2 {
+    display: inline-block;
+}
+
+.filter-options .flex-child{
+	flex: 0 1 auto; /**/
+}
+
+.filter-options select.flex-child{
+	border-radius: .2em;
+}
+
+@media screen and (max-width:460px){
+
+	nav h1 a {
+		letter-spacing: 3px;
+	}
+
+	.filter-options {
+	    flex-flow: column wrap;
+	}
+
+}
+
+@media screen and (min-width:425px){
+
+	.filter-options {
+	    flex-flow: row nowrap;
+	}
+
+}
