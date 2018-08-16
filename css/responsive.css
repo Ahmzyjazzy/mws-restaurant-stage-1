@@ -33,7 +33,7 @@ nav h1{
 }
 
 .filter-options .flex-child{
-	flex: 0 1 auto; /**/
+	flex: 0 1 auto;
 }
 
 .filter-options select.flex-child{
