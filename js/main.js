@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 registerServiceWorker = ()=>{
   if (!navigator.serviceWorker) return;
 
-  navigator.serviceWorker.register('/currency_converter/service-worker.js').then((reg)=> {
+  navigator.serviceWorker.register('/service-worker.js').then((reg)=> {
     if (!navigator.serviceWorker.controller) {
       return;
     }
