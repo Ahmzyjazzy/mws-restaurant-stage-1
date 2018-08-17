@@ -8,10 +8,53 @@ var markers = []
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
+  registerServiceWorker(); //register service worker
   initMap(); // added 
   fetchNeighborhoods();
   fetchCuisines();
 });
+
+/**
+ * Service worker functions below 
+ */
+registerServiceWorker = ()=>{
+  if (!navigator.serviceWorker) return;
+
+  navigator.serviceWorker.register('/currency_converter/service-worker.js').then((reg)=> {
+    if (!navigator.serviceWorker.controller) {
+      return;
+    }
+
+    if (reg.waiting) {
+      console.log('[ServiceWorker] is waiting - call update sw');
+      updateWorker(reg.waiting);
+      return;
+    }
+
+    if (reg.installing) {
+      console.log('[ServiceWorker] is installing - call to track Installing sw');
+      trackInstalling(reg.installing);
+      return;
+    }
+
+    reg.addEventListener('updatefound', ()=> {
+      console.log('[ServiceWorker] is installing - call to track Installing sw');
+      trackInstalling(reg.installing);
+    });
+  });
+};
+trackInstalling = (worker)=> {
+  worker.addEventListener('statechange', function() {
+    console.log('[ServiceWorker] statechange -trackInstalling');
+    if (worker.state == 'installed') {
+      updateWorker(worker);
+    }
+  });
+};
+updateWorker = (worker)=> {
+  console.log('[ServiceWorker] action to update worker called -skipWaiting');
+  worker.postMessage({action: 'skipWaiting'});
+};
 
 /**
  * Fetch all neighborhoods and set their HTML.
