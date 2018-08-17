@@ -77,7 +77,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 function serveFiles(request, cacheName) {
-  var storageUrl = (request.url.endsWith('currencies?'))? request.url.slice(8).split('/')[3] : request.url;
+  var storageUrl = (request.url.endsWith('restaurants.json'))? request.url.('/')[4] : request.url;
   /*check cache first then network*/
   return caches.open(cacheName).then(function(cache) {
     return cache.match(storageUrl).then(function(response) {
