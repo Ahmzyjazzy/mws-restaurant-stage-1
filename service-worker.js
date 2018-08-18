@@ -1,4 +1,4 @@
-//service worker
+//service worker    
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
@@ -16,6 +16,7 @@ var scope = '/';
 var staticFilesToCache = [
   `${scope}`,
   `${scope}index.html`,
+  `${scope}offline.html`,
   `${scope}css/responsive.css`,
   `${scope}css/styles.css`,
   `${scope}js/dbhelper.js`,
@@ -23,6 +24,8 @@ var staticFilesToCache = [
   `${scope}js/restaurant_info.js`,
   `${scope}data/restaurants.json`,
 ];
+
+var offlineUrl = `${scope}offline.html`;
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
@@ -68,11 +71,9 @@ self.addEventListener('fetch', function(event) {
 
   if (requestUrl.origin == location.origin && event.request.url.includes('restaurant.html')) {   
     // restaurant pages - detail info
-    console.log(event.request);
     event.respondWith(serveFiles(event.request, restaurant_info));
     return; 
   }
-
 
   event.respondWith(
     caches.match(event.request).then(function(response) {
@@ -80,7 +81,16 @@ self.addEventListener('fetch', function(event) {
       return fetch(event.request).then(function(response) {
         return response
       }).catch((e)=>{
-        console.log(`ServiceWorker failed request: ${event.request}`);
+        /*respond with offline page*/
+        console.log(`ServiceWorker failed request:`, event.request);
+        return (event.request.url.includes('restaurant.html')) && (
+            caches.open(staticCacheName).then(function(cache) {
+              return cache.match(offlineUrl).then(function(response) {
+                  if (response) return response;
+              })
+            })
+          ); 
+        /*END offline response page*/
       });
     })
   );
@@ -97,6 +107,17 @@ function serveFiles(request, cacheName) {
       return fetch(request).then(function(networkResponse) {
         cache.put(storageUrl, networkResponse.clone());
         return networkResponse;
+      }).catch((e)=>{
+        /*respond with offline page*/
+        console.log(`ServiceWorker failed request:`, request);
+        return (request.url.includes('restaurant.html')) && (
+            caches.open(staticCacheName).then(function(cache) {
+              return cache.match(offlineUrl).then(function(response) {
+                  if (response) return response;
+              })
+            })
+          ); 
+        /*END offline response page*/
       });
     });
   });

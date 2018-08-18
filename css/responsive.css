@@ -101,6 +101,19 @@ nav h1{
     /*flex: 1 1 auto;*/
 }
 
+/*
+ *
+ * restaurants info
+ *
+ */
+ .insidee header{
+     z-index: 1001;
+ }
+
+.inside #footer {
+	position: fixed;
+	z-index: 1001;
+}
 
 /*
 * 
@@ -120,6 +133,48 @@ nav h1{
 	#restaurants-list li{
 		width: 100%;
 		padding: .75em .75em;
+	}
+
+	.inside header, .inside #maincontent, .inside #footer{
+		width: 100%;
+		flex: 0 1 auto;
+	}
+
+	#breadcrumb {
+		width: 100%;
+	}
+
+	.inside #maincontent{
+		display: flex;	
+    	flex-flow: row wrap;	
+	}
+
+	.inside #maincontent #restaurant-container{
+		width: 100%;
+		min-height: 200px;
+		order: -1;
+		padding: 96px 40px 30px;
+		background: #f3f3f3;
+	}
+
+	.inside #maincontent #map-container{
+		position: relative;
+		width: 100%;
+		height: 50%;
+		top: 0;
+		order: 1;
+	}
+
+	.inside #maincontent #reviews-container{
+		width: 100%;
+	}
+	
+	#restaurant-name, #reviews-container h2{
+	    font-size: 14pt;
+	}
+
+	#reviews-list li {
+		width: 100%;
 	}
 
 }
