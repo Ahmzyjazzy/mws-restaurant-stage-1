@@ -1,12 +1,14 @@
-//service worker 
+//service worker
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
-    images = 'restaurant-image';
+    images = 'restaurant-image',
+    restaurant_info = 'restaurant-page';
 
 var allCaches = [
   staticCacheName,
   restaurants,
-  images
+  images,
+  restaurant_info
 ];
 
 var scope = '/';
@@ -19,6 +21,7 @@ var staticFilesToCache = [
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
+  `${scope}data/restaurants.json`,
 ];
 
 self.addEventListener('install', function(e) {
@@ -63,8 +66,14 @@ self.addEventListener('fetch', function(event) {
     return; 
   }
 
+  if (requestUrl.origin == location.origin && event.request.url.includes('restaurant.html')) {   
+    // restaurant pages - detail info
+    console.log(event.request);
+    event.respondWith(serveFiles(event.request, restaurant_info));
+    return; 
+  }
 
-  // response to other static files request
+
   event.respondWith(
     caches.match(event.request).then(function(response) {
       if (response) return response;
