@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Normalize.css for better cross-browser consistency -->
+  <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+  <!-- Main CSS file -->
+  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style type="text/css">
+
+    body,html{
+      overflow: hidden;
+    }
+
+    .offline header{
+      width: 100%;
+    }
+
+    .offline #breadcrumb {
+      width: 100%;
+    }
+
+    .offline #maincontent {
+      background-color: #ffffff;
+      min-width: 100%;
+    }
+
+    .offline .offline__content{
+      width: 50%;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: flex-start;
+      margin: 2em auto;
+    }
+
+    .offline .offline__content h1{
+      font-size: 2.3em;
+    }
+
+    .offline .offline__content p{
+      font-size: 1.2em;
+    }
+        
+    .offline #footer {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+    }
+
+    @media screen and (max-width: 600px){
+      .offline .offline__content {
+        width: 70%;
+      }
+    }
+
+  </style>
+  <title>Restaurant Info</title>
+</head>
+
+<body class="offline">
+  <!-- Beginning header -->
+  <header>
+    <!-- Beginning nav -->
+    <nav>
+      <h1><a href="/">Restaurant Reviews</a></h1>
+    </nav>
+    <!-- Beginning breadcrumb -->
+    <ul id="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li>Page Not Found</li>
+    </ul>
+    <!-- End breadcrumb -->
+    <!-- End nav -->
+  </header>
+  <!-- End header -->
+
+  <!-- Beginning main -->
+  <main id="maincontent">
+
+    <!-- Beginning offline__content -->
+    <section class="offline__content">
+      <h1 class="content__title">Offline</h1>
+      <p class="content__description">We were unable to load the page you requested. Please check your network connection and try again.</p>
+    </section>
+    <!-- End map -->
+  </main>
+  <!-- End main -->
+
+  <!-- Beginning footer -->
+  <footer id="footer">
+    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+  </footer>
+  <!-- End footer -->
+
+</body>
+
+</html>
