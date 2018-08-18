@@ -1,7 +1,7 @@
 //service worker 
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
-    images = 'restaurant-image',
+    images = 'restaurant-image';
 
 var allCaches = [
   staticCacheName,
@@ -15,7 +15,7 @@ var staticFilesToCache = [
   `${scope}`,
   `${scope}index.html`,
   `${scope}css/responsive.css`,
-  `${scope}css/style.css`,
+  `${scope}css/styles.css`,
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
@@ -53,15 +53,16 @@ self.addEventListener('fetch', function(event) {
 
   if (requestUrl.origin !== location.origin) {    
     //cache other origin file like map resources
-
+    event.respondWith(serveFiles(event.request, 'restaurant-map-assets'));
     return; 
   }
 
-  if (requestUrl.origin == location.origin) {    
+  if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith('/img')) {   
     // response to image file request in the folder
-    console.log(requestUrl);    
+    event.respondWith(serveFiles(event.request, images));
     return; 
   }
+
 
   // response to other static files request
   event.respondWith(
@@ -77,7 +78,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 function serveFiles(request, cacheName) {
-  var storageUrl = (request.url.endsWith('restaurants.json'))? request.url.('/')[4] : request.url;
+  var storageUrl = (request.url.endsWith('restaurants.json'))? request.url.split('/')[4] : request.url;
   /*check cache first then network*/
   return caches.open(cacheName).then(function(cache) {
     return cache.match(storageUrl).then(function(response) {
@@ -96,3 +97,4 @@ self.addEventListener('message', function(event) {
     self.skipWaiting();
   }
 });
+
