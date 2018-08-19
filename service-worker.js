@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-//service worker
-=======
 //service worker FILES
->>>>>>> master
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
