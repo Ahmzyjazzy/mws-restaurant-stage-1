@@ -130,7 +130,7 @@ nav h1 {
 @media screen and (max-width: 400px) {
 
 	nav h1 a {
-	letter-spacing: 3px;
+		letter-spacing: 3px;
 	}
 
 	.filter-options {
