@@ -4,13 +4,13 @@
 *----------------------------------------------
 */
 
-/* ==================== all ==================== */
+/*  all  */
  *, *:before, *:after {
     -webkit-box-sizing: inherit;
     box-sizing: inherit;
 }
 
-/* ==================== body,html ==================== */
+/*  body,html  */
 body,html {
 	display: flex;
 	flex-flow: row wrap;
@@ -29,7 +29,7 @@ header,main,nav,section,div,footer {
 	box-sizing: border-box;
 }
 
-/* ==================== navigation ==================== */
+/*  navigation  */
 nav {
 	padding: 0.4em;
 	height: 48px;
@@ -40,12 +40,12 @@ nav h1 {
 	margin: 0.3em auto;
 }
 
-/* ==================== images ==================== */
+/*  images  */
 #restaurant-img {
 	width: 100%;
 }
 
-/* ==================== links ==================== */
+/*  links  */
 #restaurants-list li a{
 	background-color: #009688;
 }
@@ -55,13 +55,13 @@ nav h1 {
 	border: 0;
 }
 
-/*================= RESTAURANT INDEX ============================
+/* RESTAURANT INDEX
 * use mostly fluid for restaurant list - to create some margin on
 * large screen e.g desktop
 *----------------------------------------------------------------
 */
 
-/* ==================== Filter ==================== */
+/*  Filter  */
 .filter-options {
     display: flex;
     flex-flow: row wrap;
@@ -82,7 +82,7 @@ nav h1 {
 	border-radius: 0.2em;
 }
 
-/* ==================== Restaurant laist ==================== */
+/*  Restaurant laist  */
 #restaurants-list {
     display: flex;
     flex-flow: row wrap;
@@ -100,7 +100,7 @@ nav h1 {
     padding: 15px 0.75em;
 }
 
-/* ==================== Restaurant info ==================== */
+/*  Restaurant info  */
  .insidee header {
      z-index: 1001;
  }
@@ -110,7 +110,7 @@ nav h1 {
 	z-index: 1001;
 }
 
-/* ==================== between 320px and 400px ==================== */
+/*  between 320px and 400px  */
 @media screen and (max-width: 400px) {
 
 	nav h1 a {
@@ -137,7 +137,7 @@ nav h1 {
 
 }
 
-/* ==================== between 401px and 600px ==================== */
+/*  between 401px and 600px  */
 @media screen and (min-width:401px) and (max-width:600px ) {
 
 	.filter-options {
@@ -167,7 +167,7 @@ nav h1 {
 	}
 }
 
-/* ==================== between 601px and 800px ==================== */
+/*  between 601px and 800px  */
 @media screen and (min-width:601px) and (max-width:800px) {
 
 	.filter-options {
@@ -184,7 +184,7 @@ nav h1 {
 
 }
 
-/* ==================== between 801px and 920px ==================== */
+/*  between 801px and 920px  */
 @media screen and (min-width:801px) and (max-width:920px) {
 
 	.filter-options {
@@ -201,7 +201,7 @@ nav h1 {
 
 }
 
-/* ==================== between 921px and 1250px ==================== */
+/*  between 921px and 1250px  */
 @media screen and (min-width:921px) and (max-width:1250px) {
 
 	#restaurants-list {
@@ -215,7 +215,7 @@ nav h1 {
 
 }
 
-/* ==================== between 921px and 1200px ==================== */
+/*  between 921px and 1200px  */
 @media screen and (min-width:921px) and (max-width:1200px) {
 
 	#restaurants-list {
@@ -229,7 +229,7 @@ nav h1 {
 
 }
 
-/* ==================== from 1201px upward ==================== */
+/*  from 1201px upward  */
 @media screen and (min-width:1201px) {
 
 	#restaurants-list {
@@ -244,7 +244,7 @@ nav h1 {
 }
 
 
-/*================= RESTAURANT DETAIL INFO ================================
+/* RESTAURANT DETAIL INFO
 * use layout shifter to dynamically place map, review, restaurant container
 * on diff viewport
 * -------------------------------------------------------------------------
