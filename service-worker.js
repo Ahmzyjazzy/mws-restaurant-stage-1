@@ -57,22 +57,22 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   var requestUrl = new URL(event.request.url);
 
-  if (requestUrl.origin !== location.origin) {    
+  if (requestUrl.origin !== location.origin) {
     //cache other origin file like map resources
     event.respondWith(serveFiles(event.request, 'restaurant-map-assets'));
-    return; 
+    return;
   }
 
-  if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith('/img')) {   
+  if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith('/img')) {
     // response to image file request in the folder
     event.respondWith(serveFiles(event.request, images));
-    return; 
+    return;
   }
 
-  if (requestUrl.origin == location.origin && event.request.url.includes('restaurant.html')) {   
+  if (requestUrl.origin == location.origin && event.request.url.includes('restaurant.html')) {
     // restaurant pages - detail info
     event.respondWith(serveFiles(event.request, restaurant_info));
-    return; 
+    return;
   }
 
   event.respondWith(
@@ -89,7 +89,7 @@ self.addEventListener('fetch', function(event) {
                   if (response) return response;
               })
             })
-          ); 
+          );
         /*END offline response page*/
       });
     })
@@ -116,7 +116,7 @@ function serveFiles(request, cacheName) {
                   if (response) return response;
               })
             })
-          ); 
+          );
         /*END offline response page*/
       });
     });

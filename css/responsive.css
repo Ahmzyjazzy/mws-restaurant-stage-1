@@ -1,26 +1,17 @@
 /*
-* RESPONSIVE DESIGN MIXING  
-* COLUMN DROP AND MOSTLY FLUID
+* RESPONSIVE DESIGN -INDEX AND RESTAURANT PAGE
 * Author: Ahmed Olanrewaju - @Ahmzyjazzy-MWS
-*
+*----------------------------------------------
 */
 
-/*
- *
- * all
- *
- */
+/* ==================== all ==================== */
  *, *:before, *:after {
     -webkit-box-sizing: inherit;
     box-sizing: inherit;
 }
 
-/*
- *
- * body,html
- *
- */
-body,html{
+/* ==================== body,html ==================== */
+body,html {
 	display: flex;
 	flex-flow: row wrap;
 	height: 100%;
@@ -28,36 +19,49 @@ body,html{
 	overflow-x: hidden;
 }
 
-body .box{
+body .box {
 	width: 100%;
 	flex: 0 1 auto;
 }
 
-header,main,nav,section,div,footer{
+header,main,nav,section,div,footer {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 }
 
-/*
- *
- * Header navigation
- *
- */
-nav{
-	padding: .4em;
+/* ==================== navigation ==================== */
+nav {
+	padding: 0.4em;
 	height: 48px;
 	z-index: 1;
 }
 
-nav h1{
-	margin: .3em auto;
+nav h1 {
+	margin: 0.3em auto;
 }
 
-/*
- *
- * Filter
- *
- */
+/* ==================== images ==================== */
+#restaurant-img {
+	width: 100%;
+}
+
+/* ==================== links ==================== */
+#restaurants-list li a{
+	background-color: #009688;
+}
+
+#restaurants-list li a:hover{
+	box-shadow: 2px 2px 1px #9e9e9e;
+	border: 0;
+}
+
+/*================= RESTAURANT INDEX ============================
+* use mostly fluid for restaurant list - to create some margin on
+* large screen e.g desktop
+*----------------------------------------------------------------
+*/
+
+/* ==================== Filter ==================== */
 .filter-options {
     display: flex;
     flex-flow: row wrap;
@@ -70,43 +74,34 @@ nav h1{
     display: inline-block;
 }
 
-.filter-options .flex-child{
+.filter-options .flex-child {
 	flex: 0 1 auto;
 }
 
-.filter-options select.flex-child{
-	border-radius: .2em;
+.filter-options select.flex-child {
+	border-radius: 0.2em;
 }
 
-/*
- *
- * restaurants list
- *
- */
+/* ==================== Restaurant laist ==================== */
 #restaurants-list {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-    padding: 15px 0px;
+    padding: 15px 0;
     margin:0;
 }
 
-#restaurants-list li{
+#restaurants-list li {
 	width: 25%;
 	border: 0; /*override border*/
     border-radius: 2px;
     box-shadow: 5px 5px 5px #9e9e9e9e;
     box-sizing: border-box;
-    padding: 15px .75em;
-    /*flex: 1 1 auto;*/
+    padding: 15px 0.75em;
 }
 
-/*
- *
- * restaurants info
- *
- */
- .insidee header{
+/* ==================== Restaurant info ==================== */
+ .insidee header {
      z-index: 1001;
  }
 
@@ -115,55 +110,56 @@ nav h1{
 	z-index: 1001;
 }
 
-/*
-* 
-*between 320px and 400px
-*
-*/
-@media screen and (max-width: 400px){
+/* ==================== between 320px and 400px ==================== */
+@media screen and (max-width: 400px) {
 
 	nav h1 a {
 		letter-spacing: 3px;
 	}
 
 	.filter-options {
-	    flex-flow: column wrap;
+	    flex-flow: row wrap;
 	}
 
-	#restaurants-list li{
+	/*.filter-options h2{
+	 	display: none;
+	}*/
+
+	#neighborhoods-select,
+	#cuisines-select {
+	    flex: 1 1 auto;
+	}
+
+	#restaurants-list li {
 		width: 100%;
-		padding: .75em .75em;
+		padding: 0.75em 0.75em;
 	}
 
 }
 
-/*
-* 
-*between 401px and 600px
-*
-*/
-@media screen and (min-width:401px) and (max-width:600px ){
+/* ==================== between 401px and 600px ==================== */
+@media screen and (min-width:401px) and (max-width:600px ) {
 
 	.filter-options {
 	    flex-flow: row nowrap;
 	    justify-content: space-evenly;
 	}
 
-	.filter-options h2.flex-child {
+	.filter-options h2 {
 	    flex: 0 1 100px;
 	}
 
-	.filter-options #neighborhoods-select.flex-child{
+	.filter-options #neighborhoods-select {
 	    flex: 1 1 33.33%;
 	}
 
-	.filter-options #cuisines-select.flex-child{
+	.filter-options #cuisines-select {
 	    flex: 1 1 33.33%;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 42%;
-		padding: 1em .75em;
+		padding: 1em 0.75em;
 	}
 
 	#restaurants-list li a {
@@ -171,18 +167,14 @@ nav h1{
 	}
 }
 
-/*
-* 
-*between 601px and 800px
-*
-*/
-@media screen and (min-width:601px) and (max-width:800px){
+/* ==================== between 601px and 800px ==================== */
+@media screen and (min-width:601px) and (max-width:800px) {
 
 	.filter-options {
 	    flex-flow: row nowrap;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 28%;
 	}
 
@@ -192,18 +184,14 @@ nav h1{
 
 }
 
-/*
-* 
-*between 801px and 920px
-*
-*/
-@media screen and (min-width:801px) and (max-width:920px){
+/* ==================== between 801px and 920px ==================== */
+@media screen and (min-width:801px) and (max-width:920px) {
 
 	.filter-options {
 	    flex-flow: row nowrap;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 29%;
 	}
 
@@ -213,70 +201,65 @@ nav h1{
 
 }
 
-/*
-* 
-* between from 921px
-*
-*/
-@media screen and (min-width:921px) and (max-width:1250px){
+/* ==================== between 921px and 1250px ==================== */
+@media screen and (min-width:921px) and (max-width:1250px) {
 
 	#restaurants-list {
     	width: 920px;
-    	margin: 0px auto;
+    	margin: 0 auto;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 29%;
 	}
 
 }
 
-/*
-* 
-* between from 921px and 1200px
-*
-*/
-@media screen and (min-width:921px) and (max-width:1200px){
+/* ==================== between 921px and 1200px ==================== */
+@media screen and (min-width:921px) and (max-width:1200px) {
 
 	#restaurants-list {
     	width: 920px;
-    	margin: 0px auto;
+    	margin: 0 auto;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 29%;
 	}
 
 }
 
-/*
-* 
-* from 1201
-*
-*/
-@media screen and (min-width:1201px){
+/* ==================== from 1201px upward ==================== */
+@media screen and (min-width:1201px) {
 
 	#restaurants-list {
     	width: 1200px;
-    	margin: 0px auto;
+    	margin: 0 auto;
 	}
 
-	#restaurants-list li{
+	#restaurants-list li {
 		width: 22%;
 	}
 
 }
 
 
-/*=================RESTAURANT INFO ============*/
-@media screen and (max-width: 600px){
+/*================= RESTAURANT DETAIL INFO ================================
+* use layout shifter to dynamically place map, review, restaurant container
+* on diff viewport
+* -------------------------------------------------------------------------
+*/
+
+@media screen and (max-width: 600px) {
 
 	nav h1 a {
 		letter-spacing: 3px;
 		font-size: 10pt;
 	}
 
-	.inside header, .inside #maincontent, .inside #footer{
+	.inside header,
+	.inside #maincontent,
+	.inside #footer {
 		width: 100%;
 		flex: 0 1 auto;
 	}
@@ -285,12 +268,12 @@ nav h1{
 		width: 100%;
 	}
 
-	.inside #maincontent{
-		display: flex;	
-    	flex-flow: row wrap;	
+	.inside #maincontent {
+		display: flex;
+    	flex-flow: row wrap;
 	}
 
-	.inside #maincontent #restaurant-container{
+	#restaurant-container {
 		width: 100%;
 		min-height: 200px;
 		order: -1;
@@ -298,7 +281,7 @@ nav h1{
 		background: #f3f3f3;
 	}
 
-	.inside #maincontent #map-container{
+	.inside #map-container {
 		position: relative;
 		width: 100%;
 		height: 50%;
@@ -306,12 +289,13 @@ nav h1{
 		order: 1;
 	}
 
-	.inside #maincontent #reviews-container{
+	#reviews-container {
 		width: 100%;
 		padding-bottom: 0;
 	}
 
-	#restaurant-name, #reviews-container h2{
+	#restaurant-name,
+	#reviews-container h2 {
 	    font-size: 14pt;
 	}
 
@@ -319,4 +303,9 @@ nav h1{
 		width: 100%;
 		padding: 7px 20px 20px;
 	}
+
+	#reviews-container li p {
+		font-size: 11pt;
+	}
+
 }

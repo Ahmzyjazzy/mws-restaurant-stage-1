@@ -9,13 +9,13 @@ var markers = []
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   registerServiceWorker(); //register service worker
-  initMap(); // added 
+  initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
 });
 
 /**
- * Service worker functions below 
+ * Service worker functions below
  */
 registerServiceWorker = ()=>{
   if (!navigator.serviceWorker) return;
@@ -241,15 +241,5 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 
-} 
-/* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
+}
 
