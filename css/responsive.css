@@ -41,11 +41,9 @@ nav h1 {
 }
 
 /*  images  */
-#restaurant-img {
-	width: 100%;
-}
-
+#restaurant-img,
 #restaurants-list .restaurant-img {
+	width: 100%;
 	min-height: 100px;
 }
 

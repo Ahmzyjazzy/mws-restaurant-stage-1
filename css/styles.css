@@ -263,7 +263,7 @@ nav h1 a {
   padding: 2px 0;
   text-align: center;
   text-transform: uppercase;
-	width: 90%;
+	width: 100%;
 }
 
 #restaurant-container, #reviews-container {
@@ -308,4 +308,5 @@ nav h1 a {
 
 #restaurant-hours td {
   color: #666;
+  vertical-align: top;
 }
