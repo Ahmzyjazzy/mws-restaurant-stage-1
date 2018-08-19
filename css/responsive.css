@@ -110,7 +110,7 @@ nav h1 {
 	z-index: 1001;
 }
 
-/*  between 320px and 400px  */
+/*  below and equal to 400px  */
 @media screen and (max-width: 400px) {
 
 	nav h1 a {
@@ -127,7 +127,7 @@ nav h1 {
 
 	#neighborhoods-select,
 	#cuisines-select {
-	    flex: 1 1 auto;
+	    flex: 1 1 35%;
 	}
 
 	#restaurants-list li {
@@ -135,6 +135,20 @@ nav h1 {
 		padding: 0.75em 0.75em;
 	}
 
+}
+
+/*  below and equal to 330px  */
+@media screen and (max-width: 330px){
+	.filter-options {
+	    flex-flow: row nowrap;
+	}
+}
+
+/*  below and equal to 318px  */
+@media screen and (max-width: 312px){
+	.filter-options {
+	    flex-flow: row wrap;
+	}
 }
 
 /*  between 401px and 600px  */
