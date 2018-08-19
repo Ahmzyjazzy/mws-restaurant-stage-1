@@ -378,7 +378,6 @@ nav h1 {
 	.inside #maincontent {
 		display: flex;
     	flex-flow: row wrap;
-    	overflow-x: auto;
 	}
 
 	#restaurant-container {
@@ -413,7 +412,7 @@ nav h1 {
 		width: 100%;
 	    position: relative;
 	    z-index: 1001;
-	    margin: 20px auto;
+	    margin: 20px 0;
 	}
 
 }
