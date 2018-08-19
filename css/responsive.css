@@ -121,9 +121,9 @@ nav h1 {
 	    flex-flow: row wrap;
 	}
 
-	/*.filter-options h2{
+	.filter-options h2{
 	 	display: none;
-	}*/
+	}
 
 	#neighborhoods-select,
 	#cuisines-select {
