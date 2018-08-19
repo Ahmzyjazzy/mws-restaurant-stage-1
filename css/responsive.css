@@ -127,7 +127,7 @@ nav h1 {
 
 	#neighborhoods-select,
 	#cuisines-select {
-	    flex: 1 1 auto;
+	    flex: 1 1 35%;
 	}
 
 	#restaurants-list li {
