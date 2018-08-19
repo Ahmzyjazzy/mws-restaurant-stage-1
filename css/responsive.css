@@ -14,7 +14,8 @@
 body,html {
 	display: flex;
 	flex-flow: row wrap;
-	overflow-x: hidden;
+	height: 100%
+	width: 100%;
 }
 
 body .box {
