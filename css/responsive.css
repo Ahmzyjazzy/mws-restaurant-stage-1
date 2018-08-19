@@ -14,8 +14,6 @@
 body,html {
 	display: flex;
 	flex-flow: row wrap;
-	height: 100%;
-	width: 100%;
 	overflow-x: hidden;
 }
 
@@ -274,7 +272,18 @@ nav h1 {
 	width: 100%;
 }
 
-@media screen and (max-width: 600px) {
+/* restaurant detail */
+#restaurant-name,
+#reviews-container h2 {
+    font-size: 11pt;
+}
+
+#restaurant-container,
+.inside #map-container {
+	padding-top: 99px;
+}
+
+@media screen and (max-width: 553px) {
 
 	nav h1 a {
 		letter-spacing: 3px;
@@ -314,11 +323,6 @@ nav h1 {
 		padding-bottom: 0;
 	}
 
-	#restaurant-name,
-	#reviews-container h2 {
-	    font-size: 11pt;
-	}
-
 	#reviews-list li {
 		width: 100%;
 		padding: 7px 20px 20px;
@@ -330,21 +334,17 @@ nav h1 {
 
 }
 
-@media screen and (min-width: 601px) {
+@media screen and (min-width: 554px) and (max-width: 700px) {
 
 	.inside #maincontent {
 		display: flex;
     	flex-flow: row wrap;
 	}
 
-	#restaurant-container,
-	.inside #map-container {
-		padding-top: 99px;
-	}
-
 	#restaurant-container {
 		order: -1;
 		width: 50%;
+		background: #f3f3f3;
 	}
 
 	.inside #map-container {
@@ -357,4 +357,62 @@ nav h1 {
 		order: 2;
 		width: 100%;
 	}
+
+	.inside #footer {
+		width: 100%;
+	}
+
+	body, p {
+		font-size: 11pt;
+	}
+
+	th{
+		font-size: 10pt;
+	}
+
+}
+
+@media screen and (min-width: 701px) {
+
+	.inside #maincontent {
+		display: flex;
+    	flex-flow: row wrap;
+    	overflow-x: auto;
+	}
+
+	#restaurant-container {
+		width: 33%;
+		background: #f3f3f3;
+		padding-top: 0;
+	}
+
+	#restaurant-img {
+	    width: 400px;
+	    height: auto;
+	}
+
+	#restaurant-cuisine,
+	#restaurant-name {
+		width: 400px;
+	}
+
+	.inside #map-container {
+		width: 100%;
+	    max-height: 300px;
+	    order: -1;
+	}
+
+	#reviews-container {
+		order: 1;
+		width: 66%;
+		background: #f3f3f3;
+	}
+
+	.inside #footer {
+		width: 100%;
+	    position: relative;
+	    z-index: 1001;
+	    margin: 20px auto;
+	}
+
 }

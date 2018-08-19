@@ -1,4 +1,4 @@
-//service worker files
+//service worker FILES
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
