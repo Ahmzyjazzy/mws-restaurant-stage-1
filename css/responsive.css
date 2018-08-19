@@ -40,6 +40,21 @@ nav h1 {
 	margin: 0.3em auto;
 }
 
+/* ==================== images ==================== */
+#restaurant-img {
+	width: 100%;
+}
+
+/* ==================== links ==================== */
+#restaurants-list li a{
+	background-color: #009688;
+}
+
+#restaurants-list li a:hover{
+	box-shadow: 2px 2px 1px #9e9e9e;
+	border: 0;
+}
+
 /*================= RESTAURANT INDEX ============================
 * use mostly fluid for restaurant list - to create some margin on
 * large screen e.g desktop
@@ -103,7 +118,16 @@ nav h1 {
 	}
 
 	.filter-options {
-	    flex-flow: column wrap;
+	    flex-flow: row wrap;
+	}
+
+	/*.filter-options h2{
+	 	display: none;
+	}*/
+
+	#neighborhoods-select,
+	#cuisines-select {
+	    flex: 1 1 auto;
 	}
 
 	#restaurants-list li {
@@ -257,7 +281,7 @@ nav h1 {
 		background: #f3f3f3;
 	}
 
-	#map-container {
+	.inside #map-container {
 		position: relative;
 		width: 100%;
 		height: 50%;
