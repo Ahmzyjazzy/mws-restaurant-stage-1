@@ -271,6 +271,11 @@ nav h1{
 /*=================RESTAURANT INFO ============*/
 @media screen and (max-width: 600px){
 
+	nav h1 a {
+		letter-spacing: 3px;
+		font-size: 10pt;
+	}
+
 	.inside header, .inside #maincontent, .inside #footer{
 		width: 100%;
 		flex: 0 1 auto;

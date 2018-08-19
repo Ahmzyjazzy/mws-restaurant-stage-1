@@ -1,4 +1,4 @@
-//service worker  
+//service worker 
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
