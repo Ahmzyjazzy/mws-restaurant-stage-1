@@ -269,6 +269,11 @@ nav h1 {
 * -------------------------------------------------------------------------
 */
 
+/* breadcrumb */
+#breadcrumb {
+	width: 100%;
+}
+
 @media screen and (max-width: 600px) {
 
 	nav h1 a {
@@ -281,10 +286,6 @@ nav h1 {
 	.inside #footer {
 		width: 100%;
 		flex: 0 1 auto;
-	}
-
-	#breadcrumb {
-		width: 100%;
 	}
 
 	.inside #maincontent {
@@ -327,4 +328,33 @@ nav h1 {
 		font-size: 11pt;
 	}
 
+}
+
+@media screen and (min-width: 601px) {
+
+	.inside #maincontent {
+		display: flex;
+    	flex-flow: row wrap;
+	}
+
+	#restaurant-container,
+	.inside #map-container {
+		padding-top: 99px;
+	}
+
+	#restaurant-container {
+		order: -1;
+		width: 50%;
+	}
+
+	.inside #map-container {
+		order: 1;
+		width: 50%;
+		height: 700px;
+	}
+
+	#reviews-container {
+		order: 2;
+		width: 100%;
+	}
 }
