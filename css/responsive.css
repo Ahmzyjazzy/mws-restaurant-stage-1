@@ -70,6 +70,7 @@ nav h1 {
 .filter-options h2 {
 	font-size: 11pt;
 }
+
 /* RESTAURANT INDEX
 * use mostly fluid for restaurant list - to create some margin on
 * large screen e.g desktop
@@ -136,13 +137,8 @@ nav h1 {
 	    flex-flow: row wrap;
 	}
 
-<<<<<<< HEAD
 	.filter-options h2{
-	display: none;
-=======
-	.filter-options h2 {
-	 	display: none;
->>>>>>> master
+		display: none;
 	}
 
 	#neighborhoods-select,
@@ -339,8 +335,6 @@ nav h1 {
 	}
 
 }
-<<<<<<< HEAD
-=======
 
 @media screen and (min-width: 554px) and (max-width: 700px) {
 
@@ -423,4 +417,3 @@ nav h1 {
 	}
 
 }
->>>>>>> master
