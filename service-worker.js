@@ -11,7 +11,7 @@ var allCaches = [
   restaurant_info
 ];
 
-var scope = '/';
+var scope = '/mws-restaurant-stage-1/';
 
 var staticFilesToCache = [
   `${scope}`,

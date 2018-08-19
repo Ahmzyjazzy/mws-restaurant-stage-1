@@ -9,7 +9,7 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 4000; // Change this to your server port
-    return `${window.location.origin}/data/restaurants.json`;
+    return `${window.location.origin}/mws-restaurant-stage-1/data/restaurants.json`;
   }
 
   /**
@@ -143,14 +143,14 @@ class DBHelper {
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
-    return (`./restaurant.html?id=${restaurant.id}`);
+    return (`./mws-restaurant-stage-1/restaurant.html?id=${restaurant.id}`);
   }
 
   /**
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+    return (`/mws-restaurant-stage-1/img/${restaurant.photograph}`);
   }
 
   /**
