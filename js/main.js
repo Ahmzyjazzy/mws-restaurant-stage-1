@@ -9,13 +9,13 @@ var markers = []
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   registerServiceWorker(); //register service worker
-  initMap(); // added 
+  initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
 });
 
 /**
- * Service worker functions below 
+ * Service worker functions below
  */
 registerServiceWorker = ()=>{
   if (!navigator.serviceWorker) return;
@@ -207,7 +207,7 @@ createRestaurantHTML = (restaurant) => {
   image.alt = `Photo of ${restaurant.name} restaurant, cuisine type is ${restaurant.cuisine_type}.`;
   li.append(image);
 
-  const name = document.createElement('h1');
+  const name = document.createElement('h2');
   name.innerHTML = restaurant.name;
   li.append(name);
 
@@ -241,15 +241,5 @@ addMarkersToMap = (restaurants = self.restaurants) => {
     self.markers.push(marker);
   });
 
-} 
-/* addMarkersToMap = (restaurants = self.restaurants) => {
-  restaurants.forEach(restaurant => {
-    // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
-    google.maps.event.addListener(marker, 'click', () => {
-      window.location.href = marker.url
-    });
-    self.markers.push(marker);
-  });
-} */
+}
 
