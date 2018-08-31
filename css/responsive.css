@@ -320,6 +320,11 @@ nav h1 {
 		order: 1;
 	}
 
+	#restaurant-container,
+	.inside #map-container {
+	     padding-top: 0;
+	}
+
 	#reviews-container {
 		width: 100%;
 		padding-bottom: 0;
@@ -405,15 +410,13 @@ nav h1 {
 
 	#reviews-container {
 		order: 1;
-		width: 66%;
+		width: 67%;
 		background: #f3f3f3;
 	}
 
 	.inside #footer {
 		width: 100%;
-	    position: relative;
 	    z-index: 1001;
-	    margin: 20px 0;
 	}
 
 }
