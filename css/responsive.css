@@ -319,6 +319,11 @@ nav h1 {
 		order: 1;
 	}
 
+	#restaurant-container,
+	.inside #map-container {
+	     padding-top: 0;
+	}
+
 	#reviews-container {
 		width: 100%;
 		padding-bottom: 0;
