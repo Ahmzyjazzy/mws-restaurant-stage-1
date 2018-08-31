@@ -409,15 +409,13 @@ nav h1 {
 
 	#reviews-container {
 		order: 1;
-		width: 66%;
+		width: 67%;
 		background: #f3f3f3;
 	}
 
 	.inside #footer {
 		width: 100%;
-	    position: relative;
 	    z-index: 1001;
-	    margin: 20px 0;
 	}
 
 }
