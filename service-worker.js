@@ -63,7 +63,7 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
-  if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith(`${scope}/img`)) {
+  if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith(`${scope}img`)) {
     // response to image file request in the folder
     event.respondWith(serveFiles(event.request, images));
     return;
