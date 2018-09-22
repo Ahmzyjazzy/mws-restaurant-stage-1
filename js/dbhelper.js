@@ -9,17 +9,17 @@ class DBHelper {
    */
   static get DATABASE_URL() {
     const port = 1337; // Change this to your server port
-    return `${window.location.origin}:${port}`;
+    return `http://localhost:${port}/`;
   }
 
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch('http://127.0.0.1:1337/restaurants')
+    fetch(`${DBHelper.DATABASE_URL}restaurants`)
     .then(response => response.json())
     .then( restaurants => callback(null, restaurants))
-    .catch( err => callback(error.message, null));
+    .catch( error => callback(error.message, null));
   }
 
   /**
@@ -141,7 +141,7 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}.jpg`);
+    return (`/img/${restaurant.photograph}.jpg` || `/img/no-image.jpg`);
   }
 
   /**
