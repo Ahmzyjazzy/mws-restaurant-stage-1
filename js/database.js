@@ -1,7 +1,7 @@
 ﻿class dbjs {
 
     constructor(){
-        db: null
+        db = null;
     }
     
     createDb (dbName, dbVersion, dbStoreName, indexes, objectId, callback) {
@@ -10,7 +10,6 @@
 
         var self = this, db_name;
         dbVersion += 1;
-        //console.log('version is ', dbVersion); 
 
         if (typeof dbName === 'object') {
             db_name = dbName.name;
