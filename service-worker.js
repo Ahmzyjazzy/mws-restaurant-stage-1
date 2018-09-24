@@ -1,4 +1,4 @@
-//service worker.
+//service worker 
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
@@ -22,7 +22,8 @@ var staticFilesToCache = [
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
-  `${scope}data/restaurants.json`,
+  `${scope}js/database.js`,
+  `${scope}data/restaurants.json`, 
 ];
 
 var offlineUrl = `${scope}offline.html`;
