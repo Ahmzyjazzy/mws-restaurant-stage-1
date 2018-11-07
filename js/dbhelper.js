@@ -19,7 +19,11 @@ class DBHelper {
     fetch(`${DBHelper.DATABASE_URL}restaurants`)
     .then(response => response.json())
     .then( restaurants => callback(null, restaurants))
-    .catch( error => callback(error.message, null));
+    .catch( error => {
+      //check index db here if data exist
+      callback(error.message, null)
+    })     
+      
   }
 
   /**

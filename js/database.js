@@ -297,10 +297,7 @@
             secondRequest.onerror = function (evt) {
                 
             }
-        }
-       
+        }  
     }
-
-
 
 }

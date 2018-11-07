@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Service worker functions below
  */
 registerServiceWorker = ()=>{
+
   if (!navigator.serviceWorker) return;
 
   navigator.serviceWorker.register('/service-worker.js').then((reg)=> {

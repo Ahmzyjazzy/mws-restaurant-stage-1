@@ -1,4 +1,4 @@
-//service worker 
+//service worker
 var staticCacheName = 'restaurant-static-v1',
     restaurants = 'restaurant-list',
     images = 'restaurant-image',
@@ -22,8 +22,7 @@ var staticFilesToCache = [
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
-  `${scope}js/database.js`,
-  `${scope}data/restaurants.json`, 
+  `${scope}js/database.js`
 ];
 
 var offlineUrl = `${scope}offline.html`;
@@ -78,8 +77,12 @@ self.addEventListener('fetch', function(event) {
 
   event.respondWith(
     caches.match(event.request).then(function(response) {
-      if (response) return response;
+      if (response) {
+        console.log('[served from SERVICEWORKER.]', response); 
+        return response;
+      }
       return fetch(event.request).then(function(response) {
+        console.log('[served from NETWORK.]', response); 
         return response
       }).catch((e)=>{
         /*respond with offline page*/
@@ -103,10 +106,14 @@ function serveFiles(request, cacheName) {
   /*check cache first then network*/
   return caches.open(cacheName).then(function(cache) {
     return cache.match(storageUrl).then(function(response) {
-      if (response) return response;
+      if (response) {
+        console.log('[served from SERVICEWORKER.]', response);
+        return response;
+      }
 
       return fetch(request).then(function(networkResponse) {
         cache.put(storageUrl, networkResponse.clone());
+        console.log('[served from NETWORK.]', storageUrl); 
         return networkResponse;
       }).catch((e)=>{
         /*respond with offline page*/
