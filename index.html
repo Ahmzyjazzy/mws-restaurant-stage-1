@@ -28,18 +28,12 @@
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <div class="form-group neighborhoods-select">
-          <label for="neighborhoods-select">Neighborhoods</label>
-          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Neighborhoods">
-            <option value="all">All Neighborhoods</option>
-          </select>
-        </div>
-        <div class="form-group cuisines-select">
-          <label for="cuisines-select">Cuisines</label>
-          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Cuisines">
-            <option value="all">All Cuisines</option>
-          </select>
-        </div>
+        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Neighborhoods">
+          <option value="all">All Neighborhoods</option>
+        </select>
+        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Cuisines">
+          <option value="all">All Cuisines</option>
+        </select>
       </div>
       <ul id="restaurants-list"></ul>
     </section>
