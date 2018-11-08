@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#2196F3">
   <title>Restaurant Info</title>
   <link rel="manifest" href="/manifest.json">
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
@@ -27,12 +28,18 @@
     <section>
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()">
-          <option value="all">All Neighborhoods</option>
-        </select>
-        <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()">
-          <option value="all">All Cuisines</option>
-        </select>
+        <div class="form-group neighborhoods-select">
+          <label for="neighborhoods-select">Neighborhoods</label>
+          <select id="neighborhoods-select" name="neighborhoods" onchange="updateRestaurants()" aria-label="Neighborhoods">
+            <option value="all">All Neighborhoods</option>
+          </select>
+        </div>
+        <div class="form-group cuisines-select">
+          <label for="cuisines-select">Cuisines</label>
+          <select id="cuisines-select" name="cuisines" onchange="updateRestaurants()" aria-label="Cuisines">
+            <option value="all">All Cuisines</option>
+          </select>
+        </div>
       </div>
       <ul id="restaurants-list"></ul>
     </section>

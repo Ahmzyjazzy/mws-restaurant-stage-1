@@ -119,6 +119,10 @@ nav h1 a {
 }
 
 /*  Restaurant Filtering  */
+.form-group label {
+  display: none;
+}
+
 .filter-options {
   width: 100%;
   height: 50px;
