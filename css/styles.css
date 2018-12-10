@@ -314,3 +314,20 @@ nav h1 a {
   color: #666;
   vertical-align: top;
 }
+
+/* Favourite icon */
+.favourite-icon {
+  max-width: 32px;
+  height: auto;
+}
+
+.favourite-icon.hide {
+  display: none;
+}
+
+.action-wrapper {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}

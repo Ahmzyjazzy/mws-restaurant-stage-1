@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 /**
  * Service worker functions below
  */
-registerServiceWorker = ()=>{
+registerServiceWorker = () => {
 
   if (!navigator.serviceWorker) return;
 
-  navigator.serviceWorker.register('/service-worker.js').then((reg)=> {
+  navigator.serviceWorker.register('/service-worker.js').then((reg) => {
     if (!navigator.serviceWorker.controller) {
       return;
     }
@@ -38,23 +38,23 @@ registerServiceWorker = ()=>{
       return;
     }
 
-    reg.addEventListener('updatefound', ()=> {
+    reg.addEventListener('updatefound', () => {
       console.log('[ServiceWorker] is installing - call to track Installing sw');
       trackInstalling(reg.installing);
     });
   });
 };
-trackInstalling = (worker)=> {
-  worker.addEventListener('statechange', function() {
+trackInstalling = (worker) => {
+  worker.addEventListener('statechange', function () {
     console.log('[ServiceWorker] statechange -trackInstalling');
     if (worker.state == 'installed') {
       updateWorker(worker);
     }
   });
 };
-updateWorker = (worker)=> {
+updateWorker = (worker) => {
   console.log('[ServiceWorker] action to update worker called -skipWaiting');
-  worker.postMessage({action: 'skipWaiting'});
+  worker.postMessage({ action: 'skipWaiting' });
 };
 
 /**
@@ -117,10 +117,10 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
  */
 initMap = () => {
   self.newMap = L.map('map', {
-        center: [40.722216, -73.987501],
-        zoom: 12,
-        scrollWheelZoom: false
-      });
+    center: [40.722216, -73.987501],
+    zoom: 12,
+    scrollWheelZoom: false
+  });
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
     mapboxToken: 'pk.eyJ1IjoiYWhtenlqYXp5IiwiYSI6ImNqa3k3b3EwdDBnbHQzcWxtd2o0YWpoamEifQ.wVqwATAT6b69QZM2Z30Fmg',
     maxZoom: 18,
@@ -220,10 +220,30 @@ createRestaurantHTML = (restaurant) => {
   address.innerHTML = restaurant.address;
   li.append(address);
 
+  const likeImage = document.createElement('img');
+  likeImage.className = 'favourite-icon like';
+  likeImage.src = `img/like.png`;
+  likeImage.alt = `Like icon for ${restaurant.name} restaurant`;
+
+  const dislikeImage = document.createElement('img');
+  dislikeImage.className = 'favourite-icon dislike';
+  dislikeImage.src = `img/dislike.png`;
+  dislikeImage.alt = `Dislike icon for ${restaurant.name} restaurant`;
+
+  const favWrapper = document.createElement('div');
+  favWrapper.className = 'fav-wrapper';
+  favWrapper.append(likeImage);
+  favWrapper.append(dislikeImage);
+
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
   more.href = DBHelper.urlForRestaurant(restaurant);
-  li.append(more)
+
+  const actionWrapper = document.createElement('div');
+  actionWrapper.className = 'action-wrapper';
+  actionWrapper.append(favWrapper);
+  actionWrapper.append(more);
+  li.append(actionWrapper); 
 
   return li
 }

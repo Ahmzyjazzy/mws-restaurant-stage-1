@@ -1,8 +1,8 @@
 //service worker
 var staticCacheName = 'restaurant-static-v1',
-    restaurants = 'restaurant-list',
-    images = 'restaurant-image',
-    restaurant_info = 'restaurant-page';
+  restaurants = 'restaurant-list',
+  images = 'restaurant-image',
+  restaurant_info = 'restaurant-page';
 
 var allCaches = [
   staticCacheName,
@@ -27,25 +27,25 @@ var staticFilesToCache = [
 
 var offlineUrl = `${scope}offline.html`;
 
-self.addEventListener('install', function(e) {
+self.addEventListener('install', function (e) {
   console.log('[ServiceWorker] Install');
   e.waitUntil(
-    caches.open(staticCacheName).then(function(cache) {
+    caches.open(staticCacheName).then(function (cache) {
       console.log('[ServiceWorker] Caching app shell');
       return cache.addAll(staticFilesToCache);
     })
   );
 });
 
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
+    caches.keys().then(function (cacheNames) {
       return Promise.all(
-        cacheNames.filter(function(cacheName) {
+        cacheNames.filter(function (cacheName) {
           console.log('[ServiceWorker] Removing old cache', cacheName);
           return cacheName.startsWith('restaurant-') &&
-                 !allCaches.includes(cacheName);
-        }).map(function(cacheName) {
+            !allCaches.includes(cacheName);
+        }).map(function (cacheName) {
           return caches.delete(cacheName);
         })
       );
@@ -54,7 +54,7 @@ self.addEventListener('activate', function(event) {
 });
 
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   var requestUrl = new URL(event.request.url);
 
   if (requestUrl.origin !== location.origin) {
@@ -75,25 +75,30 @@ self.addEventListener('fetch', function(event) {
     return;
   }
 
+  if(requestUrl.origin !== location.origin && (event.request.url.includes('restaurants') || event.request.url.includes('restaurants'))){
+    console.log("restaurant and reviews request", event.request);
+    return
+  }
+
   event.respondWith(
-    caches.match(event.request).then(function(response) {
+    caches.match(event.request).then(function (response) {
       if (response) {
-        console.log('[served from SERVICEWORKER.]', response); 
+        console.log('[served from SERVICEWORKER.]', response);
         return response;
       }
-      return fetch(event.request).then(function(response) {
-        console.log('[served from NETWORK.]', response); 
+      return fetch(event.request).then(function (response) {
+        console.log('[served from NETWORK.]', response);
         return response
-      }).catch((e)=>{
+      }).catch((e) => {
         /*respond with offline page*/
         console.log(`ServiceWorker failed request:`, event.request);
         return (event.request.url.includes('restaurant.html')) && (
-            caches.open(staticCacheName).then(function(cache) {
-              return cache.match(offlineUrl).then(function(response) {
-                  if (response) return response;
-              })
+          caches.open(staticCacheName).then(function (cache) {
+            return cache.match(offlineUrl).then(function (response) {
+              if (response) return response;
             })
-          );
+          })
+        );
         /*END offline response page*/
       });
     })
@@ -101,37 +106,37 @@ self.addEventListener('fetch', function(event) {
 });
 
 function serveFiles(request, cacheName) {
-  var storageUrl = (request.url.includes('restaurant.html'))? `restaurant.html/id/${request.url.split('?')[1].slice(3)}` : request.url;
+  var storageUrl = (request.url.includes('restaurant.html')) ? `restaurant.html/id/${request.url.split('?')[1].slice(3)}` : request.url;
 
   /*check cache first then network*/
-  return caches.open(cacheName).then(function(cache) {
-    return cache.match(storageUrl).then(function(response) {
+  return caches.open(cacheName).then(function (cache) {
+    return cache.match(storageUrl).then(function (response) {
       if (response) {
         console.log('[served from SERVICEWORKER.]', response);
         return response;
       }
 
-      return fetch(request).then(function(networkResponse) {
+      return fetch(request).then(function (networkResponse) {
         cache.put(storageUrl, networkResponse.clone());
-        console.log('[served from NETWORK.]', storageUrl); 
+        console.log('[served from NETWORK.]', storageUrl);
         return networkResponse;
-      }).catch((e)=>{
+      }).catch((e) => {
         /*respond with offline page*/
         console.log(`ServiceWorker failed request:`, request);
         return (request.url.includes('restaurant.html')) && (
-            caches.open(staticCacheName).then(function(cache) {
-              return cache.match(offlineUrl).then(function(response) {
-                  if (response) return response;
-              })
+          caches.open(staticCacheName).then(function (cache) {
+            return cache.match(offlineUrl).then(function (response) {
+              if (response) return response;
             })
-          );
+          })
+        );
         /*END offline response page*/
       });
     });
   });
 }
 
-self.addEventListener('message', function(event) {
+self.addEventListener('message', function (event) {
   if (event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
