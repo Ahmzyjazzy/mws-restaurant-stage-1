@@ -344,7 +344,8 @@ nav h1 {
 
 	.inside #maincontent {
 		display: flex;
-    	flex-flow: row wrap;
+		flex-flow: row wrap;
+		width: 100%;
 	}
 
 	#restaurant-container {
@@ -382,13 +383,15 @@ nav h1 {
 
 	.inside #maincontent {
 		display: flex;
-    	flex-flow: row wrap;
+		flex-flow: row wrap;
+		width: 100%;
 	}
 
 	#restaurant-container {
 		width: 33%;
 		background: #f3f3f3;
 		padding-top: 0;
+		margin-bottom: 5em;
 	}
 
 	#restaurant-img {

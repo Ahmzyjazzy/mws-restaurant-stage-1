@@ -71,7 +71,7 @@ self.addEventListener('fetch', function (event) {
   }
   
   if(requestUrl.origin !== location.origin && (event.request.url.includes('restaurants') || event.request.url.includes('reviews'))){
-    console.log("::",requestUrl.origin); 
+    console.log("::",requestUrl.origin);
     console.log("::", event.request);
     return
   }
