@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
+document.addEventListener('click',function(e){
+  console.log(e.target);
+  if(e.target && e.target.className == 'favourite-icon'){
+    alert();
+  }
+})
+
 /**
  * Service worker functions below
  */
@@ -192,6 +199,12 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   const ul = document.getElementById('restaurants-list');
   restaurants.forEach(restaurant => {
     ul.append(createRestaurantHTML(restaurant));
+    //register event listener on fav image here
+    const favctrls = document.getElementsByClassName('favourite-icon');
+    for (var i = 0; i < favctrls.length; i++) {
+      favctrls[i].addEventListener('click', addFavourite, false);
+    }
+
   });
   addMarkersToMap();
 }
@@ -200,6 +213,8 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
+  console.log('()=> ', restaurant);
+
   const li = document.createElement('li');
 
   const image = document.createElement('img');
@@ -222,18 +237,22 @@ createRestaurantHTML = (restaurant) => {
 
   const likeImage = document.createElement('img');
   likeImage.className = 'favourite-icon like';
+  likeImage.setAttribute('data-id', restaurant.id);
+  likeImage.setAttribute('data-action', 'like');
   likeImage.src = `img/like.png`;
   likeImage.alt = `Like icon for ${restaurant.name} restaurant`;
 
   const dislikeImage = document.createElement('img');
   dislikeImage.className = 'favourite-icon dislike';
+  dislikeImage.setAttribute('data-id', restaurant.id);
+  dislikeImage.setAttribute('data-action', 'dislike');
   dislikeImage.src = `img/dislike.png`;
   dislikeImage.alt = `Dislike icon for ${restaurant.name} restaurant`;
 
   const favWrapper = document.createElement('div');
   favWrapper.className = 'fav-wrapper';
-  favWrapper.append(likeImage);
-  favWrapper.append(dislikeImage);
+
+  (restaurant.is_favorite == true || restaurant.is_favorite == "true") ?  favWrapper.append(likeImage) : favWrapper.append(dislikeImage);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
@@ -246,6 +265,23 @@ createRestaurantHTML = (restaurant) => {
   li.append(actionWrapper); 
 
   return li
+}
+
+/**
+ * Add or remove favourites
+ */
+addFavourite = (event) => {
+  const id = event.target.getAttribute("data-id");
+  const is_favorite = event.target.getAttribute("data-action") == "like" ? false : true;
+  console.log('()=> ', id, is_favorite);
+  DBHelper.postFavourite(id, is_favorite, (error, restaurants) => {
+    if (error) { // Got an error!
+      console.error(error);
+    } else {
+      console.log(restaurants);
+      updateRestaurants();
+    }
+  })
 }
 
 /**
@@ -263,4 +299,6 @@ addMarkersToMap = (restaurants = self.restaurants) => {
   });
 
 }
+
+
 

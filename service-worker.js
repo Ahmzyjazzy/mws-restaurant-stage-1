@@ -1,4 +1,4 @@
-//service worker
+//service worker 
 var staticCacheName = 'restaurant-static-v1',
   restaurants = 'restaurant-list',
   images = 'restaurant-image',
@@ -57,11 +57,6 @@ self.addEventListener('activate', function (event) {
 self.addEventListener('fetch', function (event) {
   var requestUrl = new URL(event.request.url);
 
-  if (requestUrl.origin !== location.origin) {
-    //cache other origin file like map resources
-    event.respondWith(serveFiles(event.request, 'restaurant-map-assets'));
-    return;
-  }
 
   if (requestUrl.origin == location.origin && requestUrl.pathname.startsWith('/img')) {
     // response to image file request in the folder
@@ -74,10 +69,17 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(serveFiles(event.request, restaurant_info));
     return;
   }
-
-  if(requestUrl.origin !== location.origin && (event.request.url.includes('restaurants') || event.request.url.includes('restaurants'))){
-    console.log("restaurant and reviews request", event.request);
+  
+  if(requestUrl.origin !== location.origin && (event.request.url.includes('restaurants') || event.request.url.includes('reviews'))){
+    console.log("::",requestUrl.origin); 
+    console.log("::", event.request);
     return
+  }
+  
+  if (requestUrl.origin !== location.origin) {
+    //cache other origin file like map resources
+    event.respondWith(serveFiles(event.request, 'restaurant-map-assets'));
+    return;
   }
 
   event.respondWith(

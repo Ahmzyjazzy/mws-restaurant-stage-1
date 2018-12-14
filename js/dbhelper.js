@@ -135,6 +135,41 @@ class DBHelper {
   }
 
   /**
+   * Post favourite
+   */
+  static postFavourite(id, isfav, callback) {
+    fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${isfav}`, {
+      method: 'PUT',
+      body: JSON.stringify({id: id}),
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then( restaurant => callback(null, restaurant))
+    .catch( error => {
+      callback(error.message, null)
+    });
+  }
+
+
+  static fetchRestaurantById(id, callback) {
+    // fetch all restaurants with proper error handling.
+    DBHelper.fetchRestaurants((error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        const restaurant = restaurants.find(r => r.id == id);
+        if (restaurant) { // Got the restaurant
+          callback(null, restaurant);
+        } else { // Restaurant does not exist in the database
+          callback('Restaurant does not exist', null);
+        }
+      }
+    });
+  }
+
+  /**
    * Restaurant page URL.
    */
   static urlForRestaurant(restaurant) {
