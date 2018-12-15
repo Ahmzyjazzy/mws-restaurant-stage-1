@@ -86,7 +86,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   DBHelper.fetchRestaurantReview(self.restaurant.id, (error, reviews) => {
     self.restaurant.reviews = reviews;
-    if (!restaurant) {
+    if (!reviews) {
       console.error(error);
       return;
     }
@@ -121,9 +121,8 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
-  console.log('reviews ', reviews);
-
   const container = document.getElementById('reviews-container');
+  container.removeChild(document.querySelector('h2'));
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
@@ -216,7 +215,17 @@ postReview = (event) => {
     } else {
       console.log('posted reviews', reviews);
       clearForm();
-      fetchRestaurantFromURL();
+      //fetch update reviews and load page
+      DBHelper.fetchRestaurantReview(restaurant_id, (error, reviews) => {
+        self.restaurant.reviews = reviews;
+        if (!reviews) {
+          console.error(error);
+          return;
+        }
+        // fill reviews
+        console.log('new reviews', reviews);
+        fillReviewsHTML();
+      });
     }
   })
 }
@@ -227,6 +236,5 @@ postReview = (event) => {
 clearForm = ()=> {
   document.getElementById("sender_name").value = "";
   document.getElementById("rating").value = "";
-  getElementById("comment").value = "";
-  getParameterByName('id') = "";
+  document.getElementById("comment").value = "";
 }
