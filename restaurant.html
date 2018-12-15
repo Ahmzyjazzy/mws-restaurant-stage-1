@@ -59,13 +59,14 @@
         <div class="form-group">
           <label for="rating">Rate restaurant</label>
           <input type="number" class="form-control" name="rating" id="rating" step="1" min="1" max="5" placeholder="Enter rating"
-            aria-label="Rate restaurant" aria-describedby="rating" >
+            aria-label="Rate restaurant" aria-describedby="rating">
           <small id="rating" class="form-text text-muted">Enter value between 1 to 5</small>
         </div>
-        <div class="form-group form-check">
-          <input type="slider" class="form-check-input" id="exampleCheck1">
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <textarea class="form-control" id="comment" rows="3" aria-label="comment"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" id="actionbtn">Submit</button>
       </form>
     </section>
     <!-- End reviews -->

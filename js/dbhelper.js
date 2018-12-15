@@ -23,7 +23,6 @@ class DBHelper {
       //check index db here if data exist
       callback(error.message, null)
     })     
-      
   }
 
   /**
@@ -134,6 +133,20 @@ class DBHelper {
     });
   }
 
+   /**
+   * Fetch all reviews for a restaurant.
+   */
+  static fetchRestaurantReview(id,callback) {
+    fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`)
+    .then(response => response.json())
+    .then( reviews => callback(null, reviews))
+    .catch( error => {
+      //check index db here if data exist
+      callback(error.message, null)
+    })     
+  }
+
+  
   /**
    * Post favourite
    */
@@ -152,20 +165,25 @@ class DBHelper {
     });
   }
 
+ /**
+   * Post restuarant reviews
+   */
+  static postRestaurantReview(formObj, callback) {
 
-  static fetchRestaurantById(id, callback) {
-    // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        const restaurant = restaurants.find(r => r.id == id);
-        if (restaurant) { // Got the restaurant
-          callback(null, restaurant);
-        } else { // Restaurant does not exist in the database
-          callback('Restaurant does not exist', null);
-        }
+    console.log('typeof ', typeof callback);
+
+    fetch(`${DBHelper.DATABASE_URL}reviews/`, {
+      method: 'POST',
+      cache: "no-cache",
+      body: JSON.stringify(formObj),
+      headers:{
+        'Content-Type': 'application/json'
       }
+    })
+    .then(response => response.json())
+    .then( review => callback(null, review))
+    .catch( error => {
+      callback(error.message, null)
     });
   }
 

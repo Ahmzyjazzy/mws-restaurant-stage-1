@@ -6,6 +6,7 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
+  document.getElementById("actionbtn").addEventListener("click", postReview, false);
 });
 
 /**
@@ -82,8 +83,17 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
+
+  DBHelper.fetchRestaurantReview(self.restaurant.id, (error, reviews) => {
+    self.restaurant.reviews = reviews;
+    if (!restaurant) {
+      console.error(error);
+      return;
+    }
+    // fill reviews
+    fillReviewsHTML();
+  });
+
 }
 
 /**
@@ -110,6 +120,9 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  * Create all reviews HTML and add them to the webpage.
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+
+  console.log('reviews ', reviews);
+
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -138,7 +151,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  date.innerHTML = new Date(review.createdAt);
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -151,6 +164,8 @@ createReviewHTML = (review) => {
 
   return li;
 }
+
+
 
 /**
  * Add restaurant name to the breadcrumb navigation menu
@@ -176,4 +191,42 @@ getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/**
+ * Post reviews
+ */
+postReview = (event) => {
+  event.preventDefault();
+  const name = document.getElementById("sender_name").value;
+  const rating = document.getElementById("rating").value;
+  const comments = document.getElementById("comment").value;
+  const restaurant_id = getParameterByName('id');
+
+  const postObj = {
+    restaurant_id,
+    name,
+    rating,
+    comments
+  }
+
+  DBHelper.postRestaurantReview(postObj, (error, reviews) => {
+    if (error) { // Got an error!
+      console.error(error);
+    } else {
+      console.log('posted reviews', reviews);
+      clearForm();
+      fetchRestaurantFromURL();
+    }
+  })
+}
+
+/**
+ * Clear review form
+ */
+clearForm = ()=> {
+  document.getElementById("sender_name").value = "";
+  document.getElementById("rating").value = "";
+  getElementById("comment").value = "";
+  getParameterByName('id') = "";
 }

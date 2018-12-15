@@ -70,6 +70,7 @@ nav h1 {
 .filter-options h2 {
 	font-size: 11pt;
 }
+
 /* RESTAURANT INDEX
 * use mostly fluid for restaurant list - to create some margin on
 * large screen e.g desktop
@@ -123,6 +124,49 @@ nav h1 {
 .inside #footer {
 	position: fixed;
 	z-index: 1001;
+}
+
+/*  */
+#reviews-container {
+	display: flex;
+    flex-flow: column;
+}
+
+/* review form */
+form {
+    display: flex;
+    flex-flow: column;
+    align-items: baseline;
+    width: 100%;
+    min-height: 30%;
+    background: #fff;
+    padding: 1em;
+	border-radius: 0.2rem;
+	order: 1;
+}
+
+.form-group {
+	width: 100%;
+	display: flex;
+	flex-flow: column;
+	margin-bottom: 1rem;
+}
+
+.form-group label {
+	padding: 0.5em 0;
+}
+
+.form-group input,
+textarea {
+	padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+	line-height: 1.5;
+	color: #495057;
+	border: 1px solid #ced4da;
+}
+
+.form-group textarea {
+    overflow: auto;
+    resize: vertical;
 }
 
 /*  below and equal to 400px  */

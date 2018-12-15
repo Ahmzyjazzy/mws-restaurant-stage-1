@@ -273,16 +273,15 @@ createRestaurantHTML = (restaurant) => {
 addFavourite = (event) => {
   const id = event.target.getAttribute("data-id");
   const is_favorite = event.target.getAttribute("data-action") == "like" ? false : true;
-  console.log('()=> ', id, is_favorite);
   DBHelper.postFavourite(id, is_favorite, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      console.log(restaurants);
       updateRestaurants();
     }
   })
 }
+
 
 /**
  * Add markers for current restaurants to the map.
