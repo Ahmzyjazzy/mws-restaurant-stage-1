@@ -138,7 +138,6 @@ form {
     flex-flow: column;
     align-items: baseline;
     width: 100%;
-    min-height: 30%;
     background: #fff;
     padding: 1em;
 	border-radius: 0.2rem;
@@ -169,6 +168,28 @@ textarea {
     resize: vertical;
 }
 
+form button {
+    display: block;
+    width: 30%;
+    align-self: center;
+    padding: 1em;
+    border-radius: 2em;
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+    background: #3f51b5e0;
+}
+
+form button:hover {
+	background: #3f51b5fc;
+	border: 0;
+}
+
+form button:hover {
+	background: #3f51b5fc;
+	border: 0;
+}
+
 /*  below and equal to 400px  */
 @media screen and (max-width: 400px) {
 
@@ -194,6 +215,10 @@ textarea {
 		padding: 0.75em 0.75em;
 	}
 
+	form button {
+		width: 100%;
+	}
+
 }
 
 /*  below and equal to 330px  */
@@ -201,12 +226,22 @@ textarea {
 	.filter-options {
 	    flex-flow: row nowrap;
 	}
+
+	form button {
+		display: block;
+		width: 100%;
+	}
 }
 
 /*  below and equal to 318px  */
 @media screen and (max-width: 312px) {
 	.filter-options {
 	    flex-flow: row wrap;
+	}
+
+	form button {
+		display: block;
+		width: 100%;
 	}
 }
 
@@ -233,6 +268,11 @@ textarea {
 	#restaurants-list li {
 		width: 42%;
 		padding: 1em 0.75em;
+	}
+
+	form button {
+		display: block;
+		width: 100%;
 	}
 
 }

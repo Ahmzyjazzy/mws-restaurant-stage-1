@@ -122,8 +122,8 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 
   const container = document.getElementById('reviews-container');
-  container.removeChild(document.querySelector('h2'));
   const title = document.createElement('h2');
+  title.className = 'review-title';
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
@@ -150,7 +150,7 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = new Date(review.createdAt);
+  date.innerHTML = formatDate(review.createdAt);
   li.appendChild(date);
 
   const rating = document.createElement('p');
@@ -222,8 +222,9 @@ postReview = (event) => {
           console.error(error);
           return;
         }
+        //remove review title
+        document.querySelector('.review-title').remove();
         // fill reviews
-        console.log('new reviews', reviews);
         fillReviewsHTML();
       });
     }
@@ -237,4 +238,21 @@ clearForm = ()=> {
   document.getElementById("sender_name").value = "";
   document.getElementById("rating").value = "";
   document.getElementById("comment").value = "";
+}
+
+/**
+ * Clear review form
+ */
+formatDate = (d)=> {
+  const date = new Date(d);
+  const monthNames = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+  ];
+  const day = date.getDate();
+  const monthIndex = date.getMonth();
+  const year = date.getFullYear();
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
 }

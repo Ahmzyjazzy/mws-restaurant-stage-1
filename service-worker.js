@@ -1,14 +1,16 @@
-//service worker
+//service worker 
 var staticCacheName = 'restaurant-static-v1',
   restaurants = 'restaurant-list',
   images = 'restaurant-image',
-  restaurant_info = 'restaurant-page';
+  restaurant_info = 'restaurant-page',
+  api_store = 'restaurant-api';
 
 var allCaches = [
   staticCacheName,
   restaurants,
   images,
-  restaurant_info
+  restaurant_info,
+  api_store
 ];
 
 var scope = '/';
@@ -23,7 +25,7 @@ var staticFilesToCache = [
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
   `${scope}js/database.js`
-];
+]; 
 
 var offlineUrl = `${scope}offline.html`;
 
@@ -73,6 +75,7 @@ self.addEventListener('fetch', function (event) {
   if(requestUrl.origin !== location.origin && (event.request.url.includes('restaurants') || event.request.url.includes('reviews'))){
     console.log("::",requestUrl.origin);
     console.log("::", event.request);
+    event.respondWith(serveApi(event, api_store));
     return
   }
   
@@ -136,6 +139,23 @@ function serveFiles(request, cacheName) {
       });
     });
   });
+}
+
+// implementing online first then fallback to cache
+async function serveApi(event, cacheName) {
+  var storageUrl = `api${event.request.url.split('1337')[1]}`; //remove port from url
+
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(event.request);
+  const networkResponsePromise = fetch(event.request);
+
+  event.waitUntil(async function() {
+    const networkResponse = await networkResponsePromise;
+    await cache.put(storageUrl, networkResponse.clone());
+  }());
+
+  // Returned the network response otherwise return the cached response if we have one.
+  return networkResponsePromise || cachedResponse;
 }
 
 self.addEventListener('message', function (event) {
