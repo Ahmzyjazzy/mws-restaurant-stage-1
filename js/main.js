@@ -10,7 +10,6 @@ var dbname = 'RESTAURANT_DB';
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   registerServiceWorker(); //register service worker
-  DBHelper.createLocalDB(dbname); //create a local database
   initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();

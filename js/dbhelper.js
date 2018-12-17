@@ -12,18 +12,12 @@ class DBHelper {
     return `http://localhost:${port}/`;
   }
 
-  static createLocalDB(dbname) {
-    const db = new Dexie(dbname);
-    db.version(1).stores({
-      restaurants: `++id`,
-      reviews:`++id,restaurant_id`
-    });  
-    return db;
+  static saveLocalData(key,value) {
+    localforage.setItem(key, value);
   }
 
-  static get localData() {
-    const db = new Dexie(dbname);
-    return db;
+  static getLocalData(key) {
+    
   }
 
   /**
@@ -31,13 +25,20 @@ class DBHelper {
    */
   static fetchRestaurants(callback) {
     fetch(`${DBHelper.DATABASE_URL}restaurants`)
-    .then(response => response.json())
-    .then( restaurants => callback(null, restaurants))
-    .catch( error => {
-      //check index db here if data exist
-      callback(error.message, null)
-    })     
+      .then(response => response.json())
+      .then(restaurants => {
+        //store data for offline use
+        localforage.setItem('restaurants', restaurants);
+        callback(null, restaurants)
+      })
+      .catch(error => {
+        //check index db here if data exist
+        localforage.getItem('restaurants')
+        .then(res => callback(null, res))
+        .catch(err => callback(error.message, null));   
+      })
   }
+
 
   /**
    * Fetch a restaurant by its ID.
@@ -147,41 +148,41 @@ class DBHelper {
     });
   }
 
-   /**
-   * Fetch all reviews for a restaurant.
-   */
-  static fetchRestaurantReview(id,callback) {
+  /**
+  * Fetch all reviews for a restaurant.
+  */
+  static fetchRestaurantReview(id, callback) {
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`)
-    .then(response => response.json())
-    .then( reviews => callback(null, reviews))
-    .catch( error => {
-      //check index db here if data exist
-      callback(error.message, null)
-    })     
+      .then(response => response.json())
+      .then(reviews => callback(null, reviews))
+      .catch(error => {
+        //check index db here if data exist
+        callback(error.message, null)
+      })
   }
 
-  
+
   /**
    * Post favourite
    */
   static postFavourite(id, isfav, callback) {
     fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${isfav}`, {
       method: 'PUT',
-      body: JSON.stringify({id: id}),
-      headers:{
+      body: JSON.stringify({ id: id }),
+      headers: {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then( restaurant => callback(null, restaurant))
-    .catch( error => {
-      callback(error.message, null)
-    });
+      .then(response => response.json())
+      .then(restaurant => callback(null, restaurant))
+      .catch(error => {
+        callback(error.message, null)
+      });
   }
 
- /**
-   * Post restuarant reviews
-   */
+  /**
+    * Post restuarant reviews
+    */
   static postRestaurantReview(formObj, callback) {
 
     console.log('typeof ', typeof callback);
@@ -190,15 +191,15 @@ class DBHelper {
       method: 'POST',
       cache: "no-cache",
       body: JSON.stringify(formObj),
-      headers:{
+      headers: {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then( review => callback(null, review))
-    .catch( error => {
-      callback(error.message, null)
-    });
+      .then(response => response.json())
+      .then(review => callback(null, review))
+      .catch(error => {
+        callback(error.message, null)
+      });
   }
 
   /**
@@ -218,16 +219,17 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker  
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-      {title: restaurant.name,
-      alt: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant)
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
       })
-      marker.addTo(newMap);
+    marker.addTo(newMap);
     return marker;
-  } 
+  }
   /* static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,

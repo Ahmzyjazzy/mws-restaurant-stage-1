@@ -143,14 +143,10 @@ function serveFiles(request, cacheName) {
 
 // implementing online first then fallback to cache
 async function serveApi(event, cacheName) {
-  var storageUrl = `/api${event.request.url.split('1337')[1]}`; //remove port from url
-
-  console.log('1 ()=>', storageUrl);
-
+  const  storageUrl = `/api${event.request.url.split('1337')[1]}`; //remove port from url
   const cache = await caches.open(cacheName);
   const cachedResponse = await cache.match(storageUrl);
   const networkResponsePromise = fetch(event.request);
-
   event.waitUntil(async function() {
     const networkResponse = await networkResponsePromise;
     await cache.put(storageUrl, networkResponse.clone());
@@ -159,11 +155,7 @@ async function serveApi(event, cacheName) {
   // Returned the network response otherwise return the cached response if we have one.
   console.log('2 ()=>', networkResponsePromise);
   console.log('3 ()=>', cachedResponse);
-
-  if(networkResponsePromise)
-    return networkResponsePromise
-  else
-    return cachedResponse;
+  return networkResponsePromise || cachedResponse;
 }
 
 self.addEventListener('message', function (event) {
