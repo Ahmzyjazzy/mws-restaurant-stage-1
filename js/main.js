@@ -2,13 +2,15 @@ let restaurants,
   neighborhoods,
   cuisines
 var newMap
-var markers = []
+var markers = [];
+var dbname = 'RESTAURANT_DB';
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   registerServiceWorker(); //register service worker
+  DBHelper.createLocalDB(dbname); //create a local database
   initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();

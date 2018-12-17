@@ -12,6 +12,20 @@ class DBHelper {
     return `http://localhost:${port}/`;
   }
 
+  static createLocalDB(dbname) {
+    const db = new Dexie(dbname);
+    db.version(1).stores({
+      restaurants: `++id`,
+      reviews:`++id,restaurant_id`
+    });  
+    return db;
+  }
+
+  static get localData() {
+    const db = new Dexie(dbname);
+    return db;
+  }
+
   /**
    * Fetch all restaurants.
    */

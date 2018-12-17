@@ -1,4 +1,4 @@
-//service worker 
+//service worker
 var staticCacheName = 'restaurant-static-v1',
   restaurants = 'restaurant-list',
   images = 'restaurant-image',
@@ -24,7 +24,7 @@ var staticFilesToCache = [
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
-  `${scope}js/database.js`
+  `${scope}js/localforage.js`
 ]; 
 
 var offlineUrl = `${scope}offline.html`;
@@ -143,10 +143,12 @@ function serveFiles(request, cacheName) {
 
 // implementing online first then fallback to cache
 async function serveApi(event, cacheName) {
-  var storageUrl = `api${event.request.url.split('1337')[1]}`; //remove port from url
+  var storageUrl = `/api${event.request.url.split('1337')[1]}`; //remove port from url
+
+  console.log('1 ()=>', storageUrl);
 
   const cache = await caches.open(cacheName);
-  const cachedResponse = await cache.match(event.request);
+  const cachedResponse = await cache.match(storageUrl);
   const networkResponsePromise = fetch(event.request);
 
   event.waitUntil(async function() {
@@ -155,7 +157,13 @@ async function serveApi(event, cacheName) {
   }());
 
   // Returned the network response otherwise return the cached response if we have one.
-  return networkResponsePromise || cachedResponse;
+  console.log('2 ()=>', networkResponsePromise);
+  console.log('3 ()=>', cachedResponse);
+
+  if(networkResponsePromise)
+    return networkResponsePromise
+  else
+    return cachedResponse;
 }
 
 self.addEventListener('message', function (event) {
