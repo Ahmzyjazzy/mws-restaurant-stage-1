@@ -50,7 +50,26 @@ registerServiceWorker = () => {
       console.log('[ServiceWorker] is installing - call to track Installing sw');
       trackInstalling(reg.installing);
     });
+
+  })
+  .catch(function(err) { 
+    console.error(err); // the Service Worker didn't install correctly
   });
+
+  //implement background sync for favourites and reviews offline posting
+  if ('SyncManager' in window || 'sync' in reg) {
+    navigator.serviceWorker.ready.then(function(swRegistration) {      
+      return swRegistration.sync.register('syncrhronizeOfflineData')
+        .then(function() {
+          // registration succeeded
+          console.log('[ServiceWorker] is ready - sync is registered');
+        }, function() {
+          // registration failed
+          console.log('[ServiceWorker] is ready - sync reg failed');
+        });
+    });
+  }   
+
 };
 trackInstalling = (worker) => {
   worker.addEventListener('statechange', function () {

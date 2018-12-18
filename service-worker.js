@@ -110,6 +110,18 @@ self.addEventListener('fetch', function (event) {
   );
 });
 
+self.addEventListener('message', function (event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener('sync', function(event) {
+  if (event.tag == 'syncrhronizeOfflineData') {
+    event.waitUntil(syncrhronizeData());
+  }
+});
+
 function serveFiles(request, cacheName) {
   var storageUrl = (request.url.includes('restaurant.html')) ? `restaurant.html/id/${request.url.split('?')[1].slice(3)}` : request.url;
 
@@ -141,7 +153,6 @@ function serveFiles(request, cacheName) {
   });
 }
  
-// implementing online first then fallback to cache
 async function serveApi(event, cacheName) {
   const  storageUrl = `/api${event.request.url.split('1337')[1]}`; //remove port from url
   const cache = await caches.open(cacheName);
@@ -153,14 +164,12 @@ async function serveApi(event, cacheName) {
   }());
 
   // Returned the network response otherwise return the cached response if we have one.
-  console.log('2 ()=>', networkResponsePromise);
-  console.log('3 ()=>', cachedResponse);
   return networkResponsePromise || cachedResponse;
 }
 
-self.addEventListener('message', function (event) {
-  if (event.data.action === 'skipWaiting') {
-    self.skipWaiting();
-  }
-});
-
+async function syncrhronizeData() {
+  console.log('now synchronizing data...');
+  //first get all favourites in the localDB and post them to server
+  const favData = await window.localforage.getItem('restaurants').filter((r) => r.isoffline );
+  console.log('favdata', favData);
+}
