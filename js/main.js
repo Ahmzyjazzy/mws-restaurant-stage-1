@@ -277,6 +277,7 @@ addFavourite = (event) => {
   DBHelper.postFavourite(id, is_favorite, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
+      console.log('cannot post favorite at this time, pls persist')
     } else {
       updateRestaurants();
     }

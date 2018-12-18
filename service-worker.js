@@ -24,7 +24,7 @@ var staticFilesToCache = [
   `${scope}js/dbhelper.js`,
   `${scope}js/main.js`,
   `${scope}js/restaurant_info.js`,
-  `${scope}js/localforage.js`
+  `${scope}js/localforage.js` 
 ]; 
 
 var offlineUrl = `${scope}offline.html`;
@@ -140,7 +140,7 @@ function serveFiles(request, cacheName) {
     });
   });
 }
-
+ 
 // implementing online first then fallback to cache
 async function serveApi(event, cacheName) {
   const  storageUrl = `/api${event.request.url.split('1337')[1]}`; //remove port from url

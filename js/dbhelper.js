@@ -12,14 +12,6 @@ class DBHelper {
     return `http://localhost:${port}/`;
   }
 
-  static saveLocalData(key,value) {
-    localforage.setItem(key, value);
-  }
-
-  static getLocalData(key) {
-    
-  }
-
   /**
    * Fetch all restaurants.
    */
@@ -154,10 +146,16 @@ class DBHelper {
   static fetchRestaurantReview(id, callback) {
     fetch(`${DBHelper.DATABASE_URL}reviews/?restaurant_id=${id}`)
       .then(response => response.json())
-      .then(reviews => callback(null, reviews))
+      .then(reviews => {
+        //store data for offline use
+        localforage.setItem(`reviews_${id}`, reviews);
+        callback(null, reviews)
+      })
       .catch(error => {
         //check index db here if data exist
-        callback(error.message, null)
+        localforage.getItem(`reviews_${id}`)
+        .then(res => callback(null, res))
+        .catch(err => callback(error.message, null)); 
       })
   }
 
@@ -173,11 +171,31 @@ class DBHelper {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(restaurant => callback(null, restaurant))
-      .catch(error => {
-        callback(error.message, null)
+    .then(response => response.json())
+    .then(restaurant => callback(null, restaurant))
+    .catch(err => {
+      //update locally and return result - add isOffline = true to object
+      DBHelper.fetchRestaurants((error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          let newRestaurants = restaurants.map((r)=> {
+            if(r.id == id) {
+              r['isoffline'] = true;
+              r['is_favorite'] = isfav;
+            }else{
+              r['isoffline'] = false;
+            }
+            return r;
+          });
+          //update local copy before callback
+          localforage.setItem('restaurants', newRestaurants);
+          (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
+        }
+
       });
+
+    });
   }
 
   /**
