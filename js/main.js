@@ -57,7 +57,7 @@ registerServiceWorker = () => {
   });
 
   //implement background sync for favourites and reviews offline posting
-  if ('SyncManager' in window || 'sync' in reg) {
+  if ('SyncManager' in window) {
     navigator.serviceWorker.ready.then(function(swRegistration) {      
       return swRegistration.sync.register('syncrhronizeOfflineData')
         .then(function() {
