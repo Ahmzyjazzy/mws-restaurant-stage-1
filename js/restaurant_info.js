@@ -103,7 +103,7 @@ fetchRestaurantFromURL = (callback) => {
       }
       fillRestaurantHTML();
       fillBreadcrumb();
-      // callback(null, restaurant)
+      callback(null, restaurant)
     });
   }
 }
