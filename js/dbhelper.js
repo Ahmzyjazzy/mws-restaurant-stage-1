@@ -19,8 +19,9 @@ class DBHelper {
     fetch(`${DBHelper.DATABASE_URL}restaurants`)
       .then(response => response.json())
       .then(restaurants => {
-        callback(null, restaurants)
-        DBHelper.updateLocalDB('restaurants', restaurants);
+        DBHelper.updateLocalDB('restaurants', restaurants, (error, data) => {
+          callback(null, data);
+        });
       })
       .catch(error => {
         //check index db here if data exist
@@ -53,24 +54,19 @@ class DBHelper {
   /**
    * Update local DB
    */
-  static updateLocalDB(type, data) {
-
-    if(type == 'restaurants'){
-      localforage.getItem(type)
-      .then(res => {
-        if(res.length > 0){
-
-          const result = res.map( restuarants => {
-
-          })
-
-        }
-
-      })
-      .catch(err => console.log(err))
+  static updateLocalDB(type, onlineData, callback) {
+    if (type == 'restaurants') {
+      //save result to local storage
+      localforage.setItem(type, onlineData);
+      console.log('local DB updated...');
+      callback(null, onlineData);
+    } else {
+      //for reviews
+      localforage.setItem(type, onlineData);
+      console.log('local DB updated...');
+      callback(null, onlineData);
     }
   }
-
 
 
   /**
@@ -170,8 +166,9 @@ class DBHelper {
       .then(response => response.json())
       .then(reviews => {
         //store data for offline use
-        localforage.setItem(`reviews_${id}`, reviews);
-        callback(null, reviews)
+        DBHelper.updateLocalDB(`reviews_${id}`, reviews, (error, data) => {
+          callback(null, data);
+        });
       })
       .catch(error => {
         //check index db here if data exist

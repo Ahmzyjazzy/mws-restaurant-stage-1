@@ -30,6 +30,7 @@ initMap = () => {
           'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         id: 'mapbox.streets'
       }).addTo(newMap);
+      self.restaurant = restaurant; //set restaurant
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
@@ -40,6 +41,8 @@ initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
+  alert(JSON.stringify(self.restaurant));
+  
   if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;

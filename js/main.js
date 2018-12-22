@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 /**
- * Fire events to syn restaurants favorites data to 
+ * Fire events to sync restaurants favorites data to 
  */
 window.addEventListener('online', () => {
   console.log('now online');
@@ -27,7 +27,7 @@ window.addEventListener('online', () => {
     });
     console.log('syncing offline posts favorites start...', offlinePosts);
 
-    if (offlinePosts.length == 0) { console.log('No data to sync...', result); return; }
+    if (offlinePosts.length == 0) { console.log('No data to sync...', offlinePosts); return; }
 
     offlinePosts.forEach((post, i) => {
       DBHelper.postFavourite(post.id, post.is_favorite, (error, restaurants) => {
@@ -40,9 +40,8 @@ window.addEventListener('online', () => {
 
         if (i == offlinePosts.length - 1) {
           //update localstorage
-          localforage.setItem('restaurants', restaurants);
-          updateRestaurants();
           console.log('syncing offline posts favorites end...', restaurants);
+          updateRestaurants();
         }
       });
     });

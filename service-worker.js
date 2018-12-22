@@ -1,4 +1,4 @@
-//service worker 
+//service worker
 var staticCacheName = 'restaurant-static-v1',
   restaurants = 'restaurant-list',
   images = 'restaurant-image',
@@ -168,5 +168,5 @@ async function serveApi(event, cacheName) {
 }
 
 // async function syncrhronizeData() {
-//   console.log('now synchronizing data...'); 
+//   console.log('now synchronizing data...');
 // }
