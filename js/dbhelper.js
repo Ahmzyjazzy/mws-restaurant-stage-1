@@ -62,9 +62,11 @@ class DBHelper {
       callback(null, onlineData);
     } else {
       //for reviews
-      localforage.setItem(type, onlineData);
-      console.log('local DB updated...');
-      callback(null, onlineData);
+      localforage.removeItem(type).then(res => {
+        localforage.setItem(type, onlineData);
+        console.log('local DB updated...');
+        callback(null, onlineData);
+      });
     }
   }
 
@@ -166,6 +168,7 @@ class DBHelper {
       .then(response => response.json())
       .then(reviews => {
         //store data for offline use
+        console.log('newly fetched reviews', reviews);
         DBHelper.updateLocalDB(`reviews_${id}`, reviews, (error, data) => {
           callback(null, data);
         });
@@ -215,60 +218,6 @@ class DBHelper {
 
       });
 
-    //check if there is any locally stored favorite post
-    // let newPost = new Array();
-    // DBHelper.retrieveOfflinePost((error, posts)=>{
-    //   if(error){
-    //     callback(error, null);
-    //   }else{
-    //     newPost.push({id,isfav});
-    //     posts = posts.map((o)=> {
-    //       const { id, is_favorite } = o;
-    //       const obj = { id, isfav : is_favorite };
-    //       return obj;
-    //     });
-
-    //     newPost.concat(posts); //join all post together
-
-    //     newPost.forEach(({ id, isfav })=>{
-    //       fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${isfav}`, {
-    //         method: 'PUT',
-    //         body: JSON.stringify({ id: id }),
-    //         headers: {
-    //           'Content-Type': 'application/json'
-    //         }
-    //       })
-    //       .then(response => response.json())
-    //       .then(restaurant => {      
-    //         callback(null, restaurant)
-    //       })
-    //       .catch(err => {
-    //         //update locally and return result - add isOffline = true to object
-    //         DBHelper.fetchRestaurants((error, restaurants) => {
-    //           if (error) {
-    //             callback(error, null);
-    //           } else {
-    //             let newRestaurants = restaurants.map((r)=> {
-    //               if(r.id == id) {
-    //                 r['isoffline'] = true;
-    //                 r['is_favorite'] = isfav;
-    //               }else{
-    //                 r['isoffline'] = false;
-    //               }
-    //               return r;
-    //             });
-    //             //update local copy before callback
-    //             localforage.setItem('restaurants', newRestaurants);
-    //             (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
-    //           }
-    //         });
-
-    //       });
-    //     });
-
-    //   }
-    // });
-
   }
 
   /**
@@ -287,27 +236,26 @@ class DBHelper {
       .then(response => response.json())
       .then(review => callback(null, review))
       .catch(error => {
-
-        //console.log(formObj, 'offline post');
+        console.log('offline post', formObj);
         //update locally and return result - add isOffline = true to object
-        // DBHelper.fetchRestaurants((error, restaurants) => {
-        //   if (error) {
-        //     callback(error, null);
-        //   } else {
-        //     let newRestaurants = restaurants.map((r)=> {
-        //       if(r.id == id) {
-        //         r['isoffline'] = true;
-        //         r['is_favorite'] = isfav;
-        //       }else{
-        //         r['isoffline'] = false;
-        //       }
-        //       return r;
-        //     });
-        //     //update local copy before callback
-        //     localforage.setItem('restaurants', newRestaurants);
-        //     (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
-        //   }
-        // });
+        DBHelper.fetchRestaurantReview(formObj.restaurant_id, (error, reviews) => {
+          const { restaurant_id, name, rating, comments } = formObj;
+          if (error) {
+            callback(error, null);
+          } else {
+            let newReviews = [...reviews, {
+              restaurant_id,
+              name,
+              rating,
+              comments,
+              createdAt: new Date(),
+              is_offline: true
+            }];
+            //update local copy before callback
+            localforage.setItem(`reviews_${formObj.restaurant_id}`, newReviews);
+            (newReviews.length > 0) ? callback(null, newReviews) : callback('Review does not exist', null);
+          }
+        });
 
         callback(error.message, null)
       });
@@ -343,47 +291,27 @@ class DBHelper {
   }
 
   /**
-   * 
+   *  Retrieve offline posts
    */
-  static retrieveOfflinePost(params, callback) {
-    console.log('params.type ', params);
-    if (params.type == 'favorites') {
-      localforage.getItem('restaurants')
-        .then(restaurants => callback(null, restaurants.filter(r => r.is_offline)))
-        .catch(err => callback(err, null));
-    } else {
-      localforage.getItem(`reviews_${params.id}`)
-        .then(review => callback(null, review.filter(r => r.is_offline)))
-        .catch(err => callback(err, null));
-    }
+  static retrieveOfflinePost(type, callback) {
+    console.log('params.type ', type);
+    localforage.getItem(type)
+      .then(data => callback(null, data.filter(r => r.is_offline)))
+      .catch(err => callback(err, null));
   }
 
   /**
    * Synchronize favorite posts and reviews
    */
-  static backgroundSync(type, id, callback) {
+  static backgroundSync(type, callback) {
     if (!navigator.onLine) return;
-
-    if (type == 'favorites') {
-      //fetch all offline favorites post and sync with database
-      DBHelper.retrieveOfflinePost({ type }, (error, restaurants) => {
-        if (error) {
-          callback(error, null);
-        } else {
-          callback(null, restaurants);
-        }
-      });
-    } else {
-      //fetch all offline reviews of a particular restaurant and sync with db
-      DBHelper.retrieveOfflinePost({ id, type }, (error, reviews) => {
-        if (error) {
-          callback(error, null);
-        } else {
-          callback(null, reviews);
-        }
-      });
-    }
-
+    DBHelper.retrieveOfflinePost(type, (error, restaurants) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        callback(null, restaurants);
+      }
+    });
   }
 
   /* static mapMarkerForRestaurant(restaurant, map) {

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  */
 window.addEventListener('online', () => {
   console.log('now online');
-  DBHelper.backgroundSync('favorites', null, async (error, restaurants) => {
+  DBHelper.retrieveOfflinePost('restaurants', async (error, restaurants) => {
     const offlinePosts = restaurants.map(post => {
       const { id, is_favorite } = post;
       return { id, is_favorite };
@@ -51,7 +51,6 @@ window.addEventListener('online', () => {
 })
 window.addEventListener('offline', () => {
   console.log('now offline');
-
 })
 
 /**

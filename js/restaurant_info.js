@@ -10,6 +10,48 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 /**
+ * Fire events to sync restaurants reviews data to 
+ */
+window.addEventListener('online', () => {
+  console.log('now online');
+  DBHelper.retrieveOfflinePost(`reviews_${getParameterByName('id')}`, async (error, restaurants) => {
+    const offlinePosts = restaurants.map(post => {
+      const { name, rating, restaurant_id, comments } = post;
+      return {
+        restaurant_id,
+        name,
+        rating,
+        comments
+      };
+    });
+    console.log('syncing offline posts favorites start...', offlinePosts);
+
+    if (offlinePosts.length == 0) { console.log('No data to sync...', offlinePosts); return; }
+
+    offlinePosts.forEach((postObj, i) => {
+      DBHelper.postRestaurantReview(postObj, (error, reviews) => {
+        console.log(`user ${postObj.name} review post done syncing ${postObj.rating}`);
+        if (error) {
+          console.log('An error occur while syncing...', error);
+          updateRestaurantReviews(postObj.restaurant_id);
+          return
+        }
+
+        if (i == offlinePosts.length - 1) {          
+          //fetch update reviews and load page
+          updateRestaurantReviews(postObj.restaurant_id);
+        }
+      });
+    });
+
+  });
+
+})
+window.addEventListener('offline', () => {
+  console.log('now offline');
+})
+
+/**
  * Initialize leaflet map
  */
 initMap = () => {
@@ -17,21 +59,24 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-      self.newMap = L.map('map', {
-        center: [restaurant.latlng.lat, restaurant.latlng.lng],
-        zoom: 16,
-        scrollWheelZoom: false
-      });
-      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-        mapboxToken: 'pk.eyJ1IjoiYWhtenlqYXp5IiwiYSI6ImNqa3k3b3EwdDBnbHQzcWxtd2o0YWpoamEifQ.wVqwATAT6b69QZM2Z30Fmg',
-        maxZoom: 18,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-        id: 'mapbox.streets'
-      }).addTo(newMap);
-      self.restaurant = restaurant; //set restaurant
-      fillBreadcrumb();
+
+      try {
+        self.newMap = L.map('map', {
+          center: [restaurant.latlng.lat, restaurant.latlng.lng],
+          zoom: 16,
+          scrollWheelZoom: false
+        });
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
+          mapboxToken: 'pk.eyJ1IjoiYWhtenlqYXp5IiwiYSI6ImNqa3k3b3EwdDBnbHQzcWxtd2o0YWpoamEifQ.wVqwATAT6b69QZM2Z30Fmg',
+          maxZoom: 18,
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: 'mapbox.streets'
+        }).addTo(newMap);
+      } catch (e) {
+        console.group(e);
+      }
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
@@ -41,9 +86,7 @@ initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
-  alert(JSON.stringify(self.restaurant));
-  
-  if (self.restaurant) { // restaurant already fetched!
+  if (self.restaurant) { // restaurant already fetched
     callback(null, self.restaurant)
     return;
   }
@@ -54,12 +97,13 @@ fetchRestaurantFromURL = (callback) => {
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
-      if (!restaurant) {
+      if (!self.restaurant) {
         console.error(error);
         return;
       }
       fillRestaurantHTML();
-      callback(null, restaurant)
+      fillBreadcrumb();
+      // callback(null, restaurant)
     });
   }
 }
@@ -76,7 +120,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src =(restaurant.photograph) ? DBHelper.imageUrlForRestaurant(restaurant) : `/img/no-image.jpg`;
+  image.src = (restaurant.photograph) ? DBHelper.imageUrlForRestaurant(restaurant) : `/img/no-image.jpg`;
   image.alt = `Photo of ${restaurant.name} restaurant`;
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -172,7 +216,7 @@ createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant=self.restaurant) => {
+fillBreadcrumb = (restaurant = self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
@@ -219,17 +263,7 @@ postReview = (event) => {
       console.log('posted reviews', reviews);
       clearForm();
       //fetch update reviews and load page
-      DBHelper.fetchRestaurantReview(restaurant_id, (error, reviews) => {
-        self.restaurant.reviews = reviews;
-        if (!reviews) {
-          console.error(error);
-          return;
-        }
-        //remove review title
-        document.querySelector('.review-title').remove();
-        // fill reviews
-        fillReviewsHTML();
-      });
+      updateRestaurantReviews(postObj.restaurant_id);
     }
   })
 }
@@ -237,7 +271,7 @@ postReview = (event) => {
 /**
  * Clear review form
  */
-clearForm = ()=> {
+clearForm = () => {
   document.getElementById("sender_name").value = "";
   document.getElementById("rating").value = "";
   document.getElementById("comment").value = "";
@@ -246,7 +280,7 @@ clearForm = ()=> {
 /**
  * Clear review form
  */
-formatDate = (d)=> {
+formatDate = (d) => {
   const date = new Date(d);
   const monthNames = [
     "January", "February", "March",
@@ -258,4 +292,21 @@ formatDate = (d)=> {
   const monthIndex = date.getMonth();
   const year = date.getFullYear();
   return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+
+/**
+ * Update 
+ */
+updateRestaurantReviews = (restaurant_id) => {
+  DBHelper.fetchRestaurantReview(restaurant_id, (error, reviews) => {
+    self.restaurant.reviews = reviews;
+    if (!reviews) {
+      console.error(error);
+      return;
+    }
+    //remove review title
+    document.querySelector('.review-title').remove();
+    // fill reviews
+    fillReviewsHTML();
+  });
 }
