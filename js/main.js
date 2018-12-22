@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 backgroundSync = () => {
-  alert();
   /**
  * Fire events to sync restaurants favorites data to 
  */
