@@ -1,5 +1,5 @@
 let restaurant;
-let newMap;
+var newMap;
 
 /**
  * Initialize map as soon as the page is loaded.
@@ -51,6 +51,7 @@ window.addEventListener('offline', () => {
   console.log('now offline');
 })
 
+
 /**
  * Initialize leaflet map
  */
@@ -59,24 +60,20 @@ initMap = () => {
     if (error) { // Got an error!
       console.error(error);
     } else {
-
-      try {
-        self.newMap = L.map('map', {
-          center: [restaurant.latlng.lat, restaurant.latlng.lng],
-          zoom: 16,
-          scrollWheelZoom: false
-        });
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
-          mapboxToken: 'pk.eyJ1IjoiYWhtenlqYXp5IiwiYSI6ImNqa3k3b3EwdDBnbHQzcWxtd2o0YWpoamEifQ.wVqwATAT6b69QZM2Z30Fmg',
-          maxZoom: 18,
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-          id: 'mapbox.streets'
-        }).addTo(newMap);
-      } catch (e) {
-        console.group(e);
-      }
+      self.newMap = L.map('map', {
+        center: [restaurant.latlng.lat, restaurant.latlng.lng],
+        zoom: 16,
+        scrollWheelZoom: false
+      });
+      L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.jpg70?access_token={mapboxToken}', {
+        mapboxToken: 'pk.eyJ1IjoiYWhtenlqYXp5IiwiYSI6ImNqa3k3b3EwdDBnbHQzcWxtd2o0YWpoamEifQ.wVqwATAT6b69QZM2Z30Fmg',
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+          '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+          'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox.streets'
+      }).addTo(newMap);
+      fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.newMap);
     }
   });
@@ -86,7 +83,7 @@ initMap = () => {
  * Get current restaurant from page URL.
  */
 fetchRestaurantFromURL = (callback) => {
-  if (self.restaurant) { // restaurant already fetched
+  if (self.restaurant) { // restaurant already fetched!
     callback(null, self.restaurant)
     return;
   }
@@ -97,12 +94,11 @@ fetchRestaurantFromURL = (callback) => {
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
-      if (!self.restaurant) {
+      if (!restaurant) {
         console.error(error);
         return;
       }
       fillRestaurantHTML();
-      fillBreadcrumb();
       callback(null, restaurant)
     });
   }
@@ -120,7 +116,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = (restaurant.photograph) ? DBHelper.imageUrlForRestaurant(restaurant) : `/img/no-image.jpg`;
+  image.src =(restaurant.photograph) ? DBHelper.imageUrlForRestaurant(restaurant) : `/img/no-image.jpg`;
   image.alt = `Photo of ${restaurant.name} restaurant`;
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -216,7 +212,7 @@ createReviewHTML = (review) => {
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
-fillBreadcrumb = (restaurant = self.restaurant) => {
+fillBreadcrumb = (restaurant=self.restaurant) => {
   const breadcrumb = document.getElementById('breadcrumb');
   const li = document.createElement('li');
   li.innerHTML = restaurant.name;
@@ -263,7 +259,17 @@ postReview = (event) => {
       console.log('posted reviews', reviews);
       clearForm();
       //fetch update reviews and load page
-      updateRestaurantReviews(postObj.restaurant_id);
+      DBHelper.fetchRestaurantReview(restaurant_id, (error, reviews) => {
+        self.restaurant.reviews = reviews;
+        if (!reviews) {
+          console.error(error);
+          return;
+        }
+        //remove review title
+        document.querySelector('.review-title').remove();
+        // fill reviews
+        fillReviewsHTML();
+      });
     }
   })
 }
@@ -271,7 +277,7 @@ postReview = (event) => {
 /**
  * Clear review form
  */
-clearForm = () => {
+clearForm = ()=> {
   document.getElementById("sender_name").value = "";
   document.getElementById("rating").value = "";
   document.getElementById("comment").value = "";
@@ -280,7 +286,7 @@ clearForm = () => {
 /**
  * Clear review form
  */
-formatDate = (d) => {
+formatDate = (d)=> {
   const date = new Date(d);
   const monthNames = [
     "January", "February", "March",

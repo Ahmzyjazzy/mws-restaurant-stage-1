@@ -13,45 +13,51 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added
   fetchNeighborhoods();
   fetchCuisines();
+
+  backgroundSync(); //register sync event
+
 });
 
-/**
+backgroundSync = () => {
+  alert();
+  /**
  * Fire events to sync restaurants favorites data to 
  */
-window.addEventListener('online', () => {
-  console.log('now online');
-  DBHelper.retrieveOfflinePost('restaurants', async (error, restaurants) => {
-    const offlinePosts = restaurants.map(post => {
-      const { id, is_favorite } = post;
-      return { id, is_favorite };
-    });
-    console.log('syncing offline posts favorites start...', offlinePosts);
-
-    if (offlinePosts.length == 0) { console.log('No data to sync...', offlinePosts); return; }
-
-    offlinePosts.forEach((post, i) => {
-      DBHelper.postFavourite(post.id, post.is_favorite, (error, restaurants) => {
-        console.log(`${post.id} post done syncing ${post.is_favorite}`);
-        if (error) {
-          console.log('An error occur while syncing...', error);
-          updateRestaurants();
-          return
-        }
-
-        if (i == offlinePosts.length - 1) {
-          //update localstorage
-          console.log('syncing offline posts favorites end...', restaurants);
-          updateRestaurants();
-        }
+  window.addEventListener('online', () => {
+    console.log('now online');
+    DBHelper.retrieveOfflinePost('restaurants', async (error, restaurants) => {
+      const offlinePosts = restaurants.map(post => {
+        const { id, is_favorite } = post;
+        return { id, is_favorite };
       });
+      console.log('syncing offline posts favorites start...', offlinePosts);
+
+      if (offlinePosts.length == 0) { console.log('No data to sync...', offlinePosts); return; }
+
+      offlinePosts.forEach((post, i) => {
+        DBHelper.postFavourite(post.id, post.is_favorite, (error, restaurants) => {
+          console.log(`${post.id} post done syncing ${post.is_favorite}`);
+          if (error) {
+            console.log('An error occur while syncing...', error);
+            updateRestaurants();
+            return
+          }
+
+          if (i == offlinePosts.length - 1) {
+            //update localstorage
+            console.log('syncing offline posts favorites end...', restaurants);
+            updateRestaurants();
+          }
+        });
+      });
+
     });
 
-  });
-
-})
-window.addEventListener('offline', () => {
-  console.log('now offline');
-})
+  })
+  window.addEventListener('offline', () => {
+    console.log('now offline');
+  })
+}
 
 /**
  * Service worker functions below
