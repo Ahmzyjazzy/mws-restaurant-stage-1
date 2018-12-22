@@ -1,4 +1,4 @@
-//service worker
+//service worker 
 var staticCacheName = 'restaurant-static-v1',
   restaurants = 'restaurant-list',
   images = 'restaurant-image',
@@ -13,7 +13,7 @@ var allCaches = [
   api_store
 ];
 
-var scope = '/';
+var scope = '/'; 
 
 var staticFilesToCache = [
   `${scope}`,
@@ -36,7 +36,7 @@ self.addEventListener('install', function (e) {
       console.log('[ServiceWorker] Caching app shell');
       return cache.addAll(staticFilesToCache);
     })
-  );
+  ); 
 });
 
 self.addEventListener('activate', function (event) {
@@ -116,11 +116,11 @@ self.addEventListener('message', function (event) {
   }
 });
 
-self.addEventListener('sync', function(event) {
-  if (event.tag == 'syncrhronizeOfflineData') {
-    event.waitUntil(syncrhronizeData());
-  }
-});
+// self.addEventListener('sync', function(event) {
+//   if (event.tag == 'syncrhronizeOfflineData') {
+//     event.waitUntil(syncrhronizeData());
+//   }
+// });
 
 function serveFiles(request, cacheName) {
   var storageUrl = (request.url.includes('restaurant.html')) ? `restaurant.html/id/${request.url.split('?')[1].slice(3)}` : request.url;
@@ -167,9 +167,6 @@ async function serveApi(event, cacheName) {
   return networkResponsePromise || cachedResponse;
 }
 
-async function syncrhronizeData() {
-  console.log('now synchronizing data...');
-  //first get all favourites in the localDB and post them to server
-  const favData = await window.localforage.getItem('restaurants').filter((r) => r.isoffline );
-  console.log('favdata', favData);
-}
+// async function syncrhronizeData() {
+//   console.log('now synchronizing data...'); 
+// }

@@ -19,15 +19,14 @@ class DBHelper {
     fetch(`${DBHelper.DATABASE_URL}restaurants`)
       .then(response => response.json())
       .then(restaurants => {
-        //store data for offline use
-        localforage.setItem('restaurants', restaurants);
         callback(null, restaurants)
+        DBHelper.updateLocalDB('restaurants', restaurants);
       })
       .catch(error => {
         //check index db here if data exist
         localforage.getItem('restaurants')
-        .then(res => callback(null, res))
-        .catch(err => callback(error.message, null));   
+          .then(res => callback(null, res))
+          .catch(err => callback(error.message, null));
       })
   }
 
@@ -50,6 +49,29 @@ class DBHelper {
       }
     });
   }
+
+  /**
+   * Update local DB
+   */
+  static updateLocalDB(type, data) {
+
+    if(type == 'restaurants'){
+      localforage.getItem(type)
+      .then(res => {
+        if(res.length > 0){
+
+          const result = res.map( restuarants => {
+
+          })
+
+        }
+
+      })
+      .catch(err => console.log(err))
+    }
+  }
+
+
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -154,14 +176,14 @@ class DBHelper {
       .catch(error => {
         //check index db here if data exist
         localforage.getItem(`reviews_${id}`)
-        .then(res => callback(null, res))
-        .catch(err => callback(error.message, null)); 
+          .then(res => callback(null, res))
+          .catch(err => callback(error.message, null));
       })
   }
 
 
   /**
-   * Post favourite
+   * Favourite -PUT 
    */
   static postFavourite(id, isfav, callback) {
     fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${isfav}`, {
@@ -171,39 +193,91 @@ class DBHelper {
         'Content-Type': 'application/json'
       }
     })
-    .then(response => response.json())
-    .then(restaurant => callback(null, restaurant))
-    .catch(err => {
-      //update locally and return result - add isOffline = true to object
-      DBHelper.fetchRestaurants((error, restaurants) => {
-        if (error) {
-          callback(error, null);
-        } else {
-          let newRestaurants = restaurants.map((r)=> {
-            if(r.id == id) {
-              r['isoffline'] = true;
-              r['is_favorite'] = isfav;
-            }else{
-              r['isoffline'] = false;
-            }
-            return r;
-          });
-          //update local copy before callback
-          localforage.setItem('restaurants', newRestaurants);
-          (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
-        }
+      .then(response => response.json())
+      .then(restaurant => {
+        callback(null, restaurant)
+      })
+      .catch(err => {
+        //update locally and return result - add isOffline = true to object
+        DBHelper.fetchRestaurants((error, restaurants) => {
+          if (error) {
+            callback(error, null);
+          } else {
+            let newRestaurants = restaurants.map((r) => {
+              if (r.id == id) {
+                r['is_offline'] = true;
+                r['is_favorite'] = isfav;
+              }
+              return r;
+            });
+            //update local copy before callback
+            localforage.setItem('restaurants', newRestaurants);
+            (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
+          }
+        });
 
       });
 
-    });
+    //check if there is any locally stored favorite post
+    // let newPost = new Array();
+    // DBHelper.retrieveOfflinePost((error, posts)=>{
+    //   if(error){
+    //     callback(error, null);
+    //   }else{
+    //     newPost.push({id,isfav});
+    //     posts = posts.map((o)=> {
+    //       const { id, is_favorite } = o;
+    //       const obj = { id, isfav : is_favorite };
+    //       return obj;
+    //     });
+
+    //     newPost.concat(posts); //join all post together
+
+    //     newPost.forEach(({ id, isfav })=>{
+    //       fetch(`${DBHelper.DATABASE_URL}restaurants/${id}/?is_favorite=${isfav}`, {
+    //         method: 'PUT',
+    //         body: JSON.stringify({ id: id }),
+    //         headers: {
+    //           'Content-Type': 'application/json'
+    //         }
+    //       })
+    //       .then(response => response.json())
+    //       .then(restaurant => {      
+    //         callback(null, restaurant)
+    //       })
+    //       .catch(err => {
+    //         //update locally and return result - add isOffline = true to object
+    //         DBHelper.fetchRestaurants((error, restaurants) => {
+    //           if (error) {
+    //             callback(error, null);
+    //           } else {
+    //             let newRestaurants = restaurants.map((r)=> {
+    //               if(r.id == id) {
+    //                 r['isoffline'] = true;
+    //                 r['is_favorite'] = isfav;
+    //               }else{
+    //                 r['isoffline'] = false;
+    //               }
+    //               return r;
+    //             });
+    //             //update local copy before callback
+    //             localforage.setItem('restaurants', newRestaurants);
+    //             (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
+    //           }
+    //         });
+
+    //       });
+    //     });
+
+    //   }
+    // });
+
   }
 
   /**
-    * Post restuarant reviews
+    * Restuarant reviews -POST
     */
   static postRestaurantReview(formObj, callback) {
-
-    console.log('typeof ', typeof callback);
 
     fetch(`${DBHelper.DATABASE_URL}reviews/`, {
       method: 'POST',
@@ -216,6 +290,28 @@ class DBHelper {
       .then(response => response.json())
       .then(review => callback(null, review))
       .catch(error => {
+
+        //console.log(formObj, 'offline post');
+        //update locally and return result - add isOffline = true to object
+        // DBHelper.fetchRestaurants((error, restaurants) => {
+        //   if (error) {
+        //     callback(error, null);
+        //   } else {
+        //     let newRestaurants = restaurants.map((r)=> {
+        //       if(r.id == id) {
+        //         r['isoffline'] = true;
+        //         r['is_favorite'] = isfav;
+        //       }else{
+        //         r['isoffline'] = false;
+        //       }
+        //       return r;
+        //     });
+        //     //update local copy before callback
+        //     localforage.setItem('restaurants', newRestaurants);
+        //     (newRestaurants.length > 0) ? callback(null, newRestaurants) : callback('Restaurant does not exist', null);
+        //   }
+        // });
+
         callback(error.message, null)
       });
   }
@@ -248,6 +344,51 @@ class DBHelper {
     marker.addTo(newMap);
     return marker;
   }
+
+  /**
+   * 
+   */
+  static retrieveOfflinePost(params, callback) {
+    console.log('params.type ', params);
+    if (params.type == 'favorites') {
+      localforage.getItem('restaurants')
+        .then(restaurants => callback(null, restaurants.filter(r => r.is_offline)))
+        .catch(err => callback(err, null));
+    } else {
+      localforage.getItem(`reviews_${params.id}`)
+        .then(review => callback(null, review.filter(r => r.is_offline)))
+        .catch(err => callback(err, null));
+    }
+  }
+
+  /**
+   * Synchronize favorite posts and reviews
+   */
+  static backgroundSync(type, id, callback) {
+    if (!navigator.onLine) return;
+
+    if (type == 'favorites') {
+      //fetch all offline favorites post and sync with database
+      DBHelper.retrieveOfflinePost({ type }, (error, restaurants) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, restaurants);
+        }
+      });
+    } else {
+      //fetch all offline reviews of a particular restaurant and sync with db
+      DBHelper.retrieveOfflinePost({ id, type }, (error, reviews) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, reviews);
+        }
+      });
+    }
+
+  }
+
   /* static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,

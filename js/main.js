@@ -15,11 +15,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
   fetchCuisines();
 });
 
-document.addEventListener('click',function(e){
-  console.log(e.target);
-  if(e.target && e.target.className == 'favourite-icon'){
-    alert();
-  }
+/**
+ * Fire events to syn restaurants favorites data to 
+ */
+window.addEventListener('online', () => {
+  console.log('now online');
+  DBHelper.backgroundSync('favorites', null, async (error, restaurants) => {
+    const offlinePosts = restaurants.map(post => {
+      const { id, is_favorite } = post;
+      return { id, is_favorite };
+    });
+    console.log('syncing offline posts favorites start...', offlinePosts);
+
+    if (offlinePosts.length == 0) { console.log('No data to sync...', result); return; }
+
+    offlinePosts.forEach((post, i) => {
+      DBHelper.postFavourite(post.id, post.is_favorite, (error, restaurants) => {
+        console.log(`${post.id} post done syncing ${post.is_favorite}`);
+        if (error) {
+          console.log('An error occur while syncing...', error);
+          updateRestaurants();
+          return
+        }
+
+        if (i == offlinePosts.length - 1) {
+          //update localstorage
+          localforage.setItem('restaurants', restaurants);
+          updateRestaurants();
+          console.log('syncing offline posts favorites end...', restaurants);
+        }
+      });
+    });
+
+  });
+
+})
+window.addEventListener('offline', () => {
+  console.log('now offline');
+
 })
 
 /**
@@ -52,23 +85,23 @@ registerServiceWorker = () => {
     });
 
   })
-  .catch(function(err) { 
-    console.error(err); // the Service Worker didn't install correctly
-  });
+    .catch(function (err) {
+      console.error(err); // the Service Worker didn't install correctly
+    });
 
   //implement background sync for favourites and reviews offline posting
   if ('SyncManager' in window) {
-    navigator.serviceWorker.ready.then(function(swRegistration) {      
+    navigator.serviceWorker.ready.then(function (swRegistration) {
       return swRegistration.sync.register('syncrhronizeOfflineData')
-        .then(function() {
+        .then(function () {
           // registration succeeded
           console.log('[ServiceWorker] is ready - sync is registered');
-        }, function() {
+        }, function () {
           // registration failed
           console.log('[ServiceWorker] is ready - sync reg failed');
         });
     });
-  }   
+  }
 
 };
 trackInstalling = (worker) => {
@@ -233,7 +266,6 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
  * Create restaurant HTML.
  */
 createRestaurantHTML = (restaurant) => {
-  console.log('()=> ', restaurant);
 
   const li = document.createElement('li');
 
@@ -272,7 +304,7 @@ createRestaurantHTML = (restaurant) => {
   const favWrapper = document.createElement('div');
   favWrapper.className = 'fav-wrapper';
 
-  (restaurant.is_favorite == true || restaurant.is_favorite == "true") ?  favWrapper.append(likeImage) : favWrapper.append(dislikeImage);
+  (restaurant.is_favorite == true || restaurant.is_favorite == "true") ? favWrapper.append(likeImage) : favWrapper.append(dislikeImage);
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
@@ -282,7 +314,7 @@ createRestaurantHTML = (restaurant) => {
   actionWrapper.className = 'action-wrapper';
   actionWrapper.append(favWrapper);
   actionWrapper.append(more);
-  li.append(actionWrapper); 
+  li.append(actionWrapper);
 
   return li
 }
@@ -296,8 +328,9 @@ addFavourite = (event) => {
   DBHelper.postFavourite(id, is_favorite, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
-      console.log('cannot post favorite at this time, pls persist')
+      console.log('cannot post favorite at this time, pls persist');
     } else {
+      console.log('successfully post to local db');
       updateRestaurants();
     }
   })
